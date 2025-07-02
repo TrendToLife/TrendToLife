@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
 <head>
   <meta charset="UTF-8" />
   <title>TrendToLife</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     * {
       margin: 0;
@@ -14,47 +14,123 @@
     body {
       background-color: white;
       font-family: Arial, sans-serif;
+      min-height: 150vh; /* longer page */
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
     }
 
-    .top-bar,
-    .bottom-bar {
+    .top-bar {
       background-color: black;
       color: white;
       width: 100%;
       padding: 1rem;
-    }
-
-    .top-bar {
       font-size: 2rem;
       font-weight: bold;
       text-align: center;
+      position: relative;
     }
 
-    .bottom-bar {
-      font-size: 0.75rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    /* Cart button in top-right */
+    .cart-button {
+      position: absolute;
+      top: 50%;
+      right: 1rem;
+      transform: translateY(-50%);
+      background-color: #007bff;
+      border: none;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .cart-button:hover {
+      background-color: #0056b3;
     }
 
     .content {
       flex: 1;
       padding: 2rem;
-    }
-
-    .spacer {
-      margin-bottom: 2rem;
+      max-width: 700px;
+      margin: 0 auto;
       font-size: 1.1rem;
       line-height: 1.6;
       color: #333;
     }
+
+    .spacer {
+      margin-bottom: 2rem;
+    }
+
+    .bottom-bar {
+      background-color: black;
+      color: white;
+      width: 100%;
+      padding: 1rem;
+      font-size: 0.75rem;
+      text-align: center;
+    }
+
+    /* Sliding cart panel */
+    .cart-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 300px;
+      height: 100vh;
+      background: white;
+      box-shadow: -2px 0 8px rgba(0,0,0,0.2);
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      padding: 1rem;
+      z-index: 1000;
+    }
+
+    .cart-panel.open {
+      transform: translateX(0);
+    }
+
+    /* Close button < in top-left */
+    .close-cart {
+      font-size: 2rem;
+      cursor: pointer;
+      user-select: none;
+      align-self: flex-start;
+      margin-bottom: 1rem;
+      color: #333;
+      border: none;
+      background: none;
+    }
+
+    .continue-button {
+      margin-top: auto;
+      background-color: #007bff;
+      border: none;
+      color: white;
+      padding: 12px;
+      border-radius: 4px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .continue-button:hover {
+      background-color: #0056b3;
+    }
   </style>
 </head>
 <body>
-  <div class="top-bar">TrendToLife</div>
+
+  <div class="top-bar">
+    TrendToLife
+    <button class="cart-button" id="cartButton">Cart</button>
+  </div>
 
   <div class="content">
     <div class="spacer">Welcome to TrendToLife. Scroll down to see more content.</div>
@@ -63,8 +139,34 @@
     <div class="spacer">You can replace these with actual products or categories.</div>
     <div class="spacer">TrendToLife is your home for modern, minimal trends.</div>
     <div class="spacer">Keep scrolling...</div>
+    <div class="spacer">Even more content here to make the page longer.</div>
+    <div class="spacer">Add your products or articles here.</div>
+    <div class="spacer">This helps simulate a real shop with lots of items.</div>
   </div>
 
   <div class="bottom-bar">© 2025 TrendToLife. All rights reserved.</div>
+
+  <!-- Cart sliding panel -->
+  <div class="cart-panel" id="cartPanel">
+    <button class="close-cart" id="closeCart">&lt;</button>
+    <h2>Your Cart</h2>
+    <p>No items yet.</p>
+
+    <button class="continue-button">Continue to Payment</button>
+  </div>
+
+  <script>
+    const cartButton = document.getElementById('cartButton');
+    const cartPanel = document.getElementById('cartPanel');
+    const closeCart = document.getElementById('closeCart');
+
+    cartButton.addEventListener('click', () => {
+      cartPanel.classList.add('open');
+    });
+
+    closeCart.addEventListener('click', () => {
+      cartPanel.classList.remove('open');
+    });
+  </script>
 </body>
 </html>
