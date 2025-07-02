@@ -1,29 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>TrendToLife</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    /* Basic reset and styling */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     body {
-      background-color: white;
       font-family: Arial, sans-serif;
+      background: white;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      position: relative;
     }
 
+    /* Top bar styling */
     .top-bar {
-      background-color: black;
+      background: black;
       color: white;
       text-align: center;
       padding: 1rem;
       font-size: 2rem;
       font-weight: bold;
+      position: relative;
+      z-index: 1100;
     }
 
+    /* Socials container at top right */
+    .top-right {
+      position: absolute;
+      top: 10px;
+      right: 100px; /* a bit left from cart button */
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      z-index: 1200;
+    }
+
+    /* Cart button */
+    .cart-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #007bff;
+      border: none;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      z-index: 1200;
+    }
+
+    /* Social icons style */
+    .social-icon {
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    /* Footer styling */
     .bottom-bar {
       background-color: black;
       color: white;
@@ -33,266 +77,120 @@
       align-items: center;
       padding: 1rem;
       flex-wrap: wrap;
+      position: relative;
     }
 
-    .promo-section {
+    /* Gmail contact at bottom left */
+    .gmail-contact {
       display: flex;
-      gap: 0.5rem;
       align-items: center;
-    }
-
-    .promo-section input {
-      padding: 4px 8px;
-      font-size: 0.8rem;
-      border: none;
-      border-radius: 4px;
-    }
-
-    .promo-section button {
-      padding: 4px 10px;
-      font-size: 0.8rem;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 4px;
+      gap: 6px;
       cursor: pointer;
     }
 
-    .cart-button {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background-color: #007bff;
+    .gmail-icon {
+      width: 20px;
+      height: 20px;
+      fill: #D14836; /* Gmail red */
+    }
+
+    /* Modal for contact info */
+    #contactModal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      border: 2px solid #ccc;
+      padding: 20px;
+      z-index: 2000;
+      max-width: 300px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      border-radius: 8px;
+    }
+
+    #contactModal p {
+      font-size: 1rem;
+      color: #333;
+    }
+
+    #contactModal .close-btn {
+      margin-top: 15px;
+      background: black;
       color: white;
       border: none;
       padding: 8px 12px;
       border-radius: 4px;
       cursor: pointer;
-    }
-
-    .content {
-      padding: 2rem;
-      display: grid;
-      gap: 2rem;
-      flex-grow: 1;
-    }
-
-    .product {
-      border: 1px solid #ccc;
-      padding: 1rem;
-      max-width: 300px;
-    }
-
-    .info-button,
-    .add-button {
-      display: block;
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 8px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-
-    .info-button {
-      background-color: black;
-      color: white;
-    }
-
-    .add-button {
-      background-color: #007bff;
-      color: white;
-    }
-
-    .info-box {
-      display: none;
-      background-color: white;
-      color: black;
-      border: 1px solid #ddd;
-      padding: 1rem;
-      margin-top: 0.5rem;
-    }
-
-    .cart-panel {
-      position: fixed;
-      top: 0;
-      right: -400px;
-      width: 300px;
-      height: 100%;
-      background-color: #f8f8f8;
-      border-left: 1px solid #ccc;
-      padding: 1rem;
-      transition: right 0.3s ease;
-      overflow-y: auto;
-      z-index: 1000;
-    }
-
-    .cart-panel.open {
-      right: 0;
-    }
-
-    .cart-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .cart-close {
-      cursor: pointer;
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
-
-    .cart-items {
-      margin-top: 1rem;
-    }
-
-    .cart-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.5rem;
-      border-bottom: 1px solid #ddd;
-      padding-bottom: 0.5rem;
-    }
-
-    .trash-button {
-      background: none;
-      border: none;
-      color: red;
-      font-size: 1.2rem;
-      cursor: pointer;
-    }
-
-    .cart-total {
-      margin-top: 1rem;
-      font-weight: bold;
-      font-size: 1rem;
-      color: black;
-    }
-
-    .checkout-btn {
-      margin-top: 1rem;
-      background-color: #007bff;
-      color: white;
-      padding: 10px;
-      width: 100%;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
+      font-weight: 600;
     }
   </style>
 </head>
 <body>
 
   <div class="top-bar">TrendToLife</div>
-  <button class="cart-button" onclick="toggleCart()">Cart 🛒</button>
 
-  <div class="content" id="products"></div>
-
-  <div class="cart-panel" id="cartPanel">
-    <div class="cart-header">
-      <span>Cart</span>
-      <span class="cart-close" onclick="toggleCart()">&lt;</span>
-    </div>
-    <div class="cart-items" id="cartItems"></div>
-    <div class="cart-total" id="cartTotal">Total: $0.00</div>
-    <button class="checkout-btn">Continue to Payment</button>
+  <!-- Social Icons top right -->
+  <div class="top-right">
+    <a href="#" target="_blank" aria-label="Twitter" title="Twitter" class="social-icon" id="twitter">
+      <svg viewBox="0 0 24 24" fill="#1DA1F2" xmlns="http://www.w3.org/2000/svg"><path d="M23.954 4.569a10 10 0 0 1-2.825.775 4.958 4.958 0 0 0 2.163-2.723c-.95.555-2.005.959-3.127 1.184a4.92 4.92 0 0 0-8.384 4.482A13.978 13.978 0 0 1 1.671 3.149a4.917 4.917 0 0 0 1.523 6.573 4.903 4.903 0 0 1-2.228-.616c-.054 2.28 1.581 4.415 3.949 4.89a4.935 4.935 0 0 1-2.224.085 4.927 4.927 0 0 0 4.604 3.417A9.867 9.867 0 0 1 0 19.54a13.94 13.94 0 0 0 7.548 2.209c9.056 0 14.01-7.5 14.01-14.01 0-.213-.005-.425-.015-.636A10.012 10.012 0 0 0 24 4.59z"/></svg>
+    </a>
+    <a href="#" target="_blank" aria-label="TikTok" title="TikTok" class="social-icon" id="tiktok">
+      <svg viewBox="0 0 24 24" fill="#69C9D0" xmlns="http://www.w3.org/2000/svg"><path d="M9.07 2.99v14.34a4.6 4.6 0 1 1-4.6-4.6V7.21h3.2v-4.22h2.52v6.75a4.57 4.57 0 0 0 3.97 4.52v-2.94a6.99 6.99 0 0 1-6.09-6.32V3z"/></svg>
+    </a>
+    <a href="#" target="_blank" aria-label="Instagram" title="Instagram" class="social-icon" id="instagram">
+      <svg viewBox="0 0 24 24" fill="#E1306C" xmlns="http://www.w3.org/2000/svg"><path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 2A3.75 3.75 0 0 0 4 7.75v8.5A3.75 3.75 0 0 0 7.75 20h8.5a3.75 3.75 0 0 0 3.75-3.75v-8.5A3.75 3.75 0 0 0 16.25 4h-8.5zM12 7a5 5 0 1 1 0 10a5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6a3 3 0 0 0 0-6zm5.5-.75a1.25 1.25 0 1 1-2.5 0a1.25 1.25 0 0 1 2.5 0z"/></svg>
+    </a>
+    <a href="#" target="_blank" aria-label="YouTube" title="YouTube" class="social-icon" id="youtube">
+      <svg viewBox="0 0 24 24" fill="#FF0000" xmlns="http://www.w3.org/2000/svg"><path d="M23.498 6.186a2.988 2.988 0 0 0-2.104-2.107C19.713 3.5 12 3.5 12 3.5s-7.712 0-9.394.58a2.988 2.988 0 0 0-2.104 2.107A31.16 31.16 0 0 0 0 12a31.16 31.16 0 0 0 .502 5.814a2.988 2.988 0 0 0 2.104 2.107C4.288 20.5 12 20.5 12 20.5s7.713 0 9.394-.58a2.988 2.988 0 0 0 2.104-2.107A31.16 31.16 0 0 0 24 12a31.16 31.16 0 0 0-.502-5.814zM9.75 15.54V8.46l6.1 3.54l-6.1 3.54z"/></svg>
+    </a>
   </div>
 
+  <!-- Main content and cart panel here -->
+  <!-- ... (rest of your existing code) -->
+
+  <!-- Footer with gmail contact -->
   <div class="bottom-bar">
-    <div>© 2025 TrendToLife. All rights reserved.</div>
-    <div class="promo-section">
-      <input type="text" id="promoInput" placeholder="Enter promo code" />
-      <button onclick="applyPromo()">Submit</button>
+    <div class="gmail-contact" onclick="openContactModal()" role="button" tabindex="0" aria-label="Contact">
+      <svg class="gmail-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 2v.01L12 13 4 6.01V6h16zM4 18V8l8 5 8-5v10H4z"/>
+      </svg>
+      <span>Contact</span>
     </div>
+
+    <div>© 2025 TrendToLife. All rights reserved.</div>
   </div>
 
-  <script>
-    const products = [
-      { id: 1, name: "Product A", price: 25 },
-      { id: 2, name: "Product B", price: 25 },
-      { id: 3, name: "Product C", price: 25 },
-      { id: 4, name: "Product D", price: 25 }
-    ];
+  <!-- Contact modal -->
+  <div id="contactModal" role="dialog" aria-modal="true" aria-labelledby="contactTitle" tabindex="-1">
+    <p id="contactTitle">For questions or refunds, <br/> trendtolife.co@gmail.com</p>
+    <button class="close-btn" onclick="closeContactModal()">Close</button>
+  </div>
 
-    let cart = [];
-    let promoApplied = false;
+<script>
+  // Replace these URLs with your real profiles later
+  document.getElementById("twitter").href = "https://twitter.com/yourprofile";
+  document.getElementById("tiktok").href = "https://www.tiktok.com/@yourprofile";
+  document.getElementById("instagram").href = "https://instagram.com/yourprofile";
+  document.getElementById("youtube").href = "https://youtube.com/channel/yourchannel";
 
-    const productsContainer = document.getElementById("products");
+  function openContactModal() {
+    document.getElementById("contactModal").style.display = "block";
+  }
 
-    products.forEach(product => {
-      const productEl = document.createElement("div");
-      productEl.className = "product";
-      productEl.innerHTML = `
-        <button class="info-button" onclick="toggleInfo(${product.id})">More Info</button>
-        <button class="add-button" onclick="addToCart(${product.id})">Add to Cart</button>
-        <div class="info-box" id="info-${product.id}">
-          <p>This is info about ${product.name}. (Customize later)</p>
-        </div>
-      `;
-      productsContainer.appendChild(productEl);
-    });
+  function closeContactModal() {
+    document.getElementById("contactModal").style.display = "none";
+  }
 
-    function toggleInfo(id) {
-      const box = document.getElementById(`info-${id}`);
-      box.style.display = box.style.display === "block" ? "none" : "block";
+  // Accessibility: allow keyboard to close modal by Escape key
+  document.addEventListener('keydown', function(event) {
+    if(event.key === "Escape") {
+      closeContactModal();
     }
-
-    function addToCart(id) {
-      const product = products.find(p => p.id === id);
-      cart.push(product);
-      renderCart();
-    }
-
-    function removeFromCart(index) {
-      cart.splice(index, 1);
-      renderCart();
-    }
-
-    function renderCart() {
-      const cartItems = document.getElementById("cartItems");
-      const cartTotal = document.getElementById("cartTotal");
-      cartItems.innerHTML = "";
-
-      let total = 0;
-
-      cart.forEach((item, index) => {
-        total += item.price;
-        const itemEl = document.createElement("div");
-        itemEl.className = "cart-item";
-        itemEl.innerHTML = `
-          <span>${item.name}</span>
-          <button class="trash-button" onclick="removeFromCart(${index})">🗑️</button>
-        `;
-        cartItems.appendChild(itemEl);
-      });
-
-      if (promoApplied) {
-        total *= 0.8;
-      }
-
-      cartTotal.innerText = `Total: $${total.toFixed(2)}`;
-    }
-
-    function toggleCart() {
-      document.getElementById("cartPanel").classList.toggle("open");
-    }
-
-    function applyPromo() {
-      const code = document.getElementById("promoInput").value.trim().toUpperCase();
-      if (code === "RELEASE" && !promoApplied) {
-        promoApplied = true;
-        renderCart();
-        alert("Promo applied! 20% off your first order.");
-      } else if (promoApplied) {
-        alert("Promo code already used.");
-      } else {
-        alert("Invalid promo code.");
-      }
-    }
-  </script>
+  });
+</script>
 
 </body>
 </html>
