@@ -172,6 +172,7 @@
       align-items: center;
       border-bottom: 1px solid #ddd;
       padding: 0.5rem 0;
+      gap: 0.5rem;
     }
 
     .cart-item-name {
@@ -188,6 +189,24 @@
       text-align: right;
       color: #007bff;
       font-weight: bold;
+    }
+
+    .delete-item {
+      background: none;
+      border: none;
+      color: #cc0000;
+      font-size: 1.2rem;
+      cursor: pointer;
+      margin-left: 0.5rem;
+      user-select: none;
+      padding: 0 5px;
+      line-height: 1;
+      align-self: center;
+      transition: color 0.2s ease;
+    }
+
+    .delete-item:hover {
+      color: #ff4444;
     }
 
     .continue-button {
@@ -317,20 +336,19 @@
       cartCount.textContent = cartEntries.reduce((sum, item) => sum + item.qty, 0);
 
       cartEntries.forEach(item => {
-        const itemEl = document.createElement('div');
-        itemEl.className = 'cart-item';
-
-        itemEl.innerHTML = `
+        const cartItemEl = document.createElement('div');
+        cartItemEl.className = 'cart-item';
+        cartItemEl.innerHTML = `
           <div class="cart-item-name">${item.name}</div>
           <div class="cart-item-qty">x${item.qty}</div>
           <div class="cart-item-price">$${(item.price * item.qty).toFixed(2)}</div>
+          <button class="delete-item" data-id="${item.id}" title="Remove item" aria-label="Remove item">&times;</button>
         `;
-
-        cartItemsContainer.appendChild(itemEl);
+        cartItemsContainer.appendChild(cartItemEl);
       });
     }
 
-    // Add product to cart
+    // Add to cart
     function addToCart(id) {
       const product = products.find(p => p.id === id);
       if (!product) return;
@@ -371,6 +389,15 @@
     });
 
     closeCart.addEventListener('click', closeCartPanel);
+
+    // Remove item from cart
+    cartItemsContainer.addEventListener('click', e => {
+      if (e.target.classList.contains('delete-item')) {
+        const id = parseInt(e.target.getAttribute('data-id'));
+        delete cart[id];
+        renderCart();
+      }
+    });
 
     // Initial render
     renderProducts();
