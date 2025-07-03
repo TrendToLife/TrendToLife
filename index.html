@@ -5,692 +5,516 @@
   <title>TrendToLife</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
     body {
+      margin: 0;
       font-family: Arial, sans-serif;
-      background-color: white;
+      background: white;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
     }
-
-    .top-bar,
-    .bottom-bar {
-      background-color: black;
+    header {
+      background: black;
       color: white;
-      width: 100%;
-      padding: 1rem;
-    }
-
-    .top-bar {
+      font-weight: bold;
       font-size: 2rem;
-      font-weight: bold;
       text-align: center;
-      position: relative;
-    }
-
-    /* Socials and Cart Button in top bar */
-    .socials-cart {
-      position: absolute;
-      top: 50%;
-      right: 1rem;
-      transform: translateY(-50%);
-      display: flex;
-      align-items: center;
-      gap: 0.7rem;
-    }
-
-    .social-btn {
-      width: 28px;
-      height: 28px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 4px;
-    }
-    .social-btn svg {
-      width: 20px;
-      height: 20px;
-    }
-    .social-twitter {
-      background: #1da1f2;
-    }
-    .social-instagram {
-      background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285aeb 90%);
-    }
-    .social-youtube {
-      background: #ff0000;
-    }
-    .social-tiktok {
-      background: #000;
-      position: relative;
-    }
-    .social-tiktok svg path:nth-child(1) {
-      fill: #69c9d0;
-    }
-    .social-tiktok svg path:nth-child(2) {
-      fill: #ee1d52;
-    }
-    .social-tiktok svg path:nth-child(3) {
-      fill: #fff;
-    }
-
-    /* Cart button */
-    #openCartBtn {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 4px;
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 1rem;
-      margin-left: 10px;
-      user-select: none;
-      transition: background-color 0.3s ease;
-    }
-    #openCartBtn:hover {
-      background-color: #0056b3;
-    }
-
-    .content {
-      flex: 1;
-      padding: 2rem;
-      max-width: 900px;
-      margin: 0 auto;
-    }
-
-    .product {
-      border: 1px solid #ddd;
       padding: 1rem;
-      margin-bottom: 1.5rem;
-      position: relative;
+    }
+    main {
+      flex: 1;
+      padding: 1rem;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .product {
+      border: 1px solid #ccc;
       border-radius: 6px;
+      padding: 1rem;
+      width: 250px;
+      position: relative;
+      box-sizing: border-box;
     }
-
-    .product h3 {
-      margin-bottom: 0.3rem;
-      font-weight: 600;
-      font-size: 1.2rem;
-    }
-
-    .product p.price {
-      font-weight: bold;
-      margin-bottom: 0.7rem;
-      color: #444;
-    }
-
-    /* Black button above add to cart */
     .info-btn {
-      background-color: black;
+      background: black;
       color: white;
-      width: 100%;
-      padding: 7px;
       border: none;
-      border-radius: 4px;
-      margin-bottom: 8px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      user-select: none;
-    }
-    .info-btn:hover {
-      background-color: #222;
-    }
-
-    .add-cart-btn {
-      background-color: #007bff;
-      border: none;
-      color: white;
-      padding: 8px 12px;
-      border-radius: 4px;
-      cursor: pointer;
       width: 100%;
-      font-size: 1rem;
-      font-weight: 600;
-      user-select: none;
-      transition: background-color 0.3s ease;
+      padding: 0.5rem;
+      cursor: pointer;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
     }
-    .add-cart-btn:hover {
-      background-color: #0056b3;
-    }
-
-    /* Info box that appears when info button clicked */
     .info-box {
-      background-color: white;
-      border: 1px solid black;
-      padding: 10px;
-      margin-top: 6px;
-      border-radius: 4px;
-      font-size: 0.9rem;
       display: none;
-      color: #000;
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
+      white-space: normal;
+      word-wrap: break-word;
+      max-width: 100%;
+      box-sizing: border-box;
+      border-radius: 4px;
     }
-
-    /* Cart panel sliding */
+    h3 {
+      margin: 0.5rem 0;
+    }
+    .price {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    .add-cart-btn {
+      background: #007bff;
+      color: white;
+      border: none;
+      width: 100%;
+      padding: 0.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 4px;
+    }
     #cartPanel {
       position: fixed;
       top: 0;
-      right: -380px;
-      width: 350px;
-      height: 100vh;
-      background-color: #f9f9f9;
-      box-shadow: -3px 0 10px rgba(0, 0, 0, 0.15);
-      transition: right 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      z-index: 1000;
-      padding: 1rem;
+      right: -320px;
+      width: 320px;
+      height: 100%;
+      background: #fff;
+      box-shadow: -3px 0 6px rgba(0,0,0,0.3);
       overflow-y: auto;
+      transition: right 0.3s ease;
+      padding: 1rem;
+      box-sizing: border-box;
+      z-index: 1000;
     }
     #cartPanel.open {
       right: 0;
     }
-
     #closeCartBtn {
       background: none;
       border: none;
-      font-size: 1.6rem;
-      font-weight: bold;
+      font-size: 2rem;
       cursor: pointer;
-      align-self: flex-start;
       margin-bottom: 1rem;
-      user-select: none;
     }
-
     #cartItems {
-      flex: 1;
+      max-height: 60vh;
       overflow-y: auto;
       margin-bottom: 1rem;
     }
-
     .cart-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid #ddd;
-      padding: 8px 0;
+      margin-bottom: 0.5rem;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 0.25rem;
     }
-
     .cart-item-name {
       flex: 1;
-      font-weight: 600;
-      font-size: 1rem;
+      margin-right: 0.5rem;
     }
     .cart-item-quantity {
-      margin: 0 10px;
-      font-size: 0.9rem;
+      margin-right: 0.5rem;
     }
     .cart-item-price {
-      font-weight: 600;
-      font-size: 1rem;
-      min-width: 60px;
-      text-align: right;
+      margin-right: 0.5rem;
+      font-weight: bold;
     }
-
-    /* Trash button */
     .trash-btn {
-      background: transparent;
+      background: none;
       border: none;
       cursor: pointer;
-      color: #cc0000;
-      font-size: 1.1rem;
-      margin-left: 6px;
-      user-select: none;
+      color: red;
+      font-size: 1.2rem;
+      line-height: 1;
     }
-    .trash-btn:hover {
-      color: #ff0000;
-    }
-
-    /* Discount code area */
     #discountArea {
+      display: flex;
       margin-bottom: 1rem;
     }
     #discountCodeInput {
-      width: 60%;
-      padding: 6px 8px;
+      flex: 1;
+      padding: 0.4rem;
       font-size: 1rem;
-      border: 1px solid #aaa;
-      border-radius: 4px;
-      margin-right: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px 0 0 4px;
+      outline-offset: 2px;
     }
     #applyDiscountBtn {
-      background-color: #007bff;
-      border: none;
+      background: #007bff;
       color: white;
-      padding: 6px 12px;
-      border-radius: 4px;
-      font-weight: 600;
+      border: none;
+      padding: 0.4rem 0.75rem;
       cursor: pointer;
-      user-select: none;
-      transition: background-color 0.3s ease;
-    }
-    #applyDiscountBtn:hover {
-      background-color: #0056b3;
-    }
-
-    /* Totals */
-    #totalCost, #youSaved {
-      font-weight: 700;
-      margin-top: 0.6rem;
-      font-size: 1.1rem;
-      color: #222;
+      border-radius: 0 4px 4px 0;
+      font-weight: bold;
     }
     #youSaved {
+      font-weight: bold;
       color: green;
-      margin-bottom: 1rem;
+      margin-bottom: 0.25rem;
       display: none;
     }
-
-    /* Contact bottom bar */
+    #totalCost {
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+    #continuePaymentBtn {
+      background: #007bff;
+      color: white;
+      border: none;
+      width: 100%;
+      padding: 0.75rem;
+      cursor: pointer;
+      font-weight: bold;
+      border-radius: 4px;
+    }
     .bottom-bar {
+      background: black;
+      color: white;
+      padding: 0.5rem 1rem;
+      font-size: 0.75rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.75rem;
       position: relative;
+      z-index: 1100;
     }
-
+    .gmail-icon {
+      width: 18px;
+      height: 18px;
+      vertical-align: middle;
+      fill: white;
+      margin-right: 6px;
+    }
     #contactSection {
+      cursor: pointer;
       display: flex;
       align-items: center;
-      cursor: pointer;
       user-select: none;
-      gap: 6px;
-      color: white;
-    }
-    #contactSection:hover {
-      text-decoration: underline;
     }
     #contactInfoBox {
       position: absolute;
-      bottom: 35px;
+      bottom: 30px;
       left: 10px;
       background: white;
       color: black;
-      border: 1px solid black;
-      padding: 10px;
-      border-radius: 4px;
-      width: 300px;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
       display: none;
-      font-size: 0.9rem;
-      z-index: 500;
+      white-space: nowrap;
+      font-size: 0.85rem;
     }
-    #contactInfoBox.show {
-      display: block;
-    }
-
-    /* Gmail icon */
-    .gmail-icon {
-      width: 22px;
-      height: 22px;
-      fill: #d44638;
-      user-select: none;
-    }
-
-    /* Login Modal */
-    #loginModal {
-      display: none;
-      position: fixed;
-      z-index: 1500;
-      left: 0;
-      top: 0;
-      width: 100vw;
-      height: 100vh;
-      background-color: rgba(0, 0, 0, 0.5);
-      justify-content: center;
+    /* Social icons top right next to cart */
+    #topBarExtras {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      display: flex;
+      gap: 0.75rem;
       align-items: center;
     }
-    #loginModal[aria-hidden="false"] {
-      display: flex;
-    }
-    #loginModalContent {
-      background: white;
-      padding: 2rem;
-      border-radius: 8px;
-      width: 320px;
-      max-width: 90%;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-      position: relative;
-      font-family: Arial, sans-serif;
-    }
-
-    #closeLoginModal {
-      position: absolute;
-      top: 8px;
-      right: 12px;
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    #loginModalContent h2 {
-      margin-bottom: 1rem;
-      font-weight: 700;
-      font-size: 1.5rem;
-      text-align: center;
-    }
-
-    #loginModalContent input[type="text"],
-    #loginModalContent input[type="password"] {
-      width: 100%;
-      padding: 8px 10px;
-      margin-bottom: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 1rem;
-    }
-
-    #loginModalContent button {
-      width: 100%;
-      padding: 8px;
-      background-color: #007bff;
+    #cartToggleBtn {
+      background: #007bff;
       border: none;
       color: white;
-      font-weight: 700;
-      border-radius: 4px;
+      padding: 0.5rem 1rem;
+      font-weight: bold;
       cursor: pointer;
-      user-select: none;
-      font-size: 1rem;
+      border-radius: 4px;
+      margin-left: 1rem;
     }
-    #loginModalContent button:hover {
-      background-color: #0056b3;
+    .social-icon {
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
     }
+    .social-icon:hover {
+      transform: scale(1.1);
+    }
+    /* Individual social colors */
+    .twitter { fill: #1DA1F2; }
+    .instagram { fill: #E1306C; }
+    .youtube { fill: #FF0000; }
+    .tiktok { fill: #000000; } /* We'll fix TikTok icon to black */
   </style>
 </head>
 <body>
 
-  <div class="top-bar" role="banner" aria-label="Site header">
-    TrendToLife
+<header>
+  TrendToLife
+  <div id="topBarExtras" aria-label="Social and cart controls">
+    <svg tabindex="0" role="link" aria-label="Twitter" class="social-icon twitter" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M23.954 4.569a10 10 0 01-2.825.775 4.932 4.932 0 002.163-2.724c-.951.555-2.005.959-3.127 1.184a4.916 4.916 0 00-8.379 4.482A13.955 13.955 0 011.671 3.149a4.917 4.917 0 001.523 6.574 4.9 4.9 0 01-2.228-.616c-.054 2.281 1.581 4.415 3.949 4.89a4.935 4.935 0 01-2.224.085 4.92 4.92 0 004.6 3.417 9.865 9.865 0 01-6.102 2.105c-.398 0-.79-.023-1.175-.068a13.945 13.945 0 007.548 2.209c9.056 0 14.004-7.5 14.004-14.004 0-.213-.005-.425-.014-.636A10.012 10.012 0 0024 4.59z"/>
+    </svg>
 
-    <div class="socials-cart">
-      <!-- Social buttons -->
-      <a href="#" aria-label="Twitter" class="social-btn social-twitter" target="_blank" rel="noopener noreferrer" id="twitterLink" tabindex="0">
-        <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M23 3a10.9 10.9 0 01-3.14.86 5.48 5.48 0 002.4-3.03 10.86 10.86 0 01-3.48 1.33 5.43 5.43 0 00-9.27 4.95 15.42 15.42 0 01-11.2-5.68 5.43 5.43 0 001.69 7.25A5.39 5.39 0 012 7.69v.07a5.43 5.43 0 004.36 5.32 5.48 5.48 0 01-2.45.09 5.44 5.44 0 005.08 3.77A10.9 10.9 0 013 19.54 10.9 10.9 0 011 19.43a15.38 15.38 0 008.34 2.44c10.01 0 15.49-8.3 15.49-15.49 0-.24 0-.48-.02-.71A11.06 11.06 0 0023 3z"/></svg>
-      </a>
+    <svg tabindex="0" role="link" aria-label="Instagram" class="social-icon instagram" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M7.75 2h8.5A5.75 5.75 0 0122 7.75v8.5A5.75 5.75 0 0116.25 22h-8.5A5.75 5.75 0 012 16.25v-8.5A5.75 5.75 0 017.75 2zm0 1.5A4.25 4.25 0 003.5 7.75v8.5A4.25 4.25 0 007.75 20.5h8.5a4.25 4.25 0 004.25-4.25v-8.5a4.25 4.25 0 00-4.25-4.25h-8.5zM12 7a5 5 0 110 10 5 5 0 010-10zm0 1.5a3.5 3.5 0 100 7 3.5 3.5 0 000-7zm4.75-.88a1.125 1.125 0 110 2.25 1.125 1.125 0 010-2.25z"/>
+    </svg>
 
-      <a href="#" aria-label="Instagram" class="social-btn social-instagram" target="_blank" rel="noopener noreferrer" id="instagramLink" tabindex="0">
-        <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M7.75 2h8.5A5.75 5.75 0 0122 7.75v8.5A5.75 5.75 0 0116.25 22h-8.5A5.75 5.75 0 012 16.25v-8.5A5.75 5.75 0 017.75 2zm0 2A3.75 3.75 0 004 7.75v8.5A3.75 3.75 0 007.75 20h8.5A3.75 3.75 0 0020 16.25v-8.5A3.75 3.75 0 0016.25 4h-8.5zm8.25 1.75a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm-4.25 2a4.5 4.5 0 11.001 9.001A4.5 4.5 0 0111.75 9.75z"/></svg>
-      </a>
+    <svg tabindex="0" role="link" aria-label="YouTube" class="social-icon youtube" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M23.498 6.186a2.927 2.927 0 00-2.06-2.066C19.536 3.5 12 3.5 12 3.5s-7.536 0-9.438.62a2.927 2.927 0 00-2.06 2.066A30.182 30.182 0 000 12a30.182 30.182 0 00.502 5.814 2.927 2.927 0 002.06 2.066C4.464 20.5 12 20.5 12 20.5s7.536 0 9.438-.62a2.927 2.927 0 002.06-2.066A30.182 30.182 0 0024 12a30.182 30.182 0 00-.502-5.814zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/>
+    </svg>
 
-      <a href="#" aria-label="YouTube" class="social-btn social-youtube" target="_blank" rel="noopener noreferrer" id="youtubeLink" tabindex="0">
-        <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M10 15l5.19-3L10 9v6z"/><path d="M21.8 8s-.2-1.4-.8-2a3.35 3.35 0 00-2.4-1.7C16.7 4 12 4 12 4s-4.7 0-6.6.3a3.35 3.35 0 00-2.4 1.7c-.6.6-.8 2-.8 2S2 9.6 2 11.2v1.6c0 1.6.2 3.2.2 3.2s.2 1.4.8 2a3.3 3.3 0 002.4 1.7c1.9.3 6.6.3 6.6.3s4.7 0 6.6-.3a3.3 3.3 0 002.4-1.7c.6-.6.8-2 .8-2s.2-1.6.2-3.2v-1.6c0-1.6-.2-3.2-.2-3.2z"/></svg>
-      </a>
+    <svg tabindex="0" role="link" aria-label="TikTok" class="social-icon tiktok" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <!-- TikTok official icon simplified -->
+      <path d="M9 3v10.5a3.75 3.75 0 103.75 3.75v-7.5a4.5 4.5 0 01-3.75-6.75z" fill="#69C9D0"/>
+      <path d="M15 3.75a4.5 4.5 0 01-4.5-4.5v12.75A6.75 6.75 0 1115 3.75z" fill="#000000"/>
+    </svg>
 
-      <a href="#" aria-label="TikTok" class="social-btn social-tiktok" target="_blank" rel="noopener noreferrer" id="tiktokLink" tabindex="0">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-          <path d="M9 4h3a4 4 0 004 4v3a7 7 0 11-7-7z"/>
-          <path d="M14 11v9a2 2 0 01-2-2v-6z" fill="#69c9d0"/>
-          <path d="M14 11h3a2 2 0 01-2-2v-3z" fill="#ee1d52"/>
-          <path d="M9 4v3a4 4 0 004 4v-3a7 7 0 01-7-7z" fill="#fff"/>
-        </svg>
-      </a>
+    <button id="cartToggleBtn" aria-label="Toggle Cart">Cart</button>
+  </div>
+</header>
 
-      <button id="openCartBtn" aria-label="Open Cart">Cart</button>
-    </div>
+<main id="productsContainer" aria-label="Product listings">
+  <!-- Products will be generated here -->
+</main>
+
+<div id="cartPanel" aria-hidden="true" aria-label="Shopping Cart">
+  <button id="closeCartBtn" aria-label="Close Cart">&lt;</button>
+  <div id="cartItems" aria-live="polite" aria-atomic="true"></div>
+
+  <div id="discountArea">
+    <input
+      id="discountCodeInput"
+      type="text"
+      placeholder="Discount code"
+      aria-label="Enter discount code"
+    />
+    <button id="applyDiscountBtn">Apply</button>
   </div>
 
-  <main class="content" role="main" aria-label="Product listings">
+  <div id="youSaved">You saved: $0.00</div>
+  <div id="totalCost">Total cost: $0.00</div>
+  <button id="continuePaymentBtn" aria-label="Continue to payment">Continue to Payment</button>
+</div>
 
-    <!-- Example products -->
-    <div class="product" data-id="1" data-name="Stylish Watch" data-price="79.99">
-      <button class="info-btn" aria-expanded="false" aria-controls="info1">More Info</button>
-      <div class="info-box" id="info1">This stylish watch features a sleek design and water resistance.</div>
-      <h3>Stylish Watch</h3>
-      <p class="price">$79.99</p>
-      <button class="add-cart-btn" aria-label="Add Stylish Watch to cart">Add to Cart</button>
-    </div>
-
-    <div class="product" data-id="2" data-name="Cool Sneakers" data-price="59.99">
-      <button class="info-btn" aria-expanded="false" aria-controls="info2">More Info</button>
-      <div class="info-box" id="info2">Comfortable and trendy sneakers perfect for daily wear.</div>
-      <h3>Cool Sneakers</h3>
-      <p class="price">$59.99</p>
-      <button class="add-cart-btn" aria-label="Add Cool Sneakers to cart">Add to Cart</button>
-    </div>
-
-    <div class="product" data-id="3" data-name="Wireless Earbuds" data-price="39.99">
-      <button class="info-btn" aria-expanded="false" aria-controls="info3">More Info</button>
-      <div class="info-box" id="info3">High-quality wireless earbuds with noise cancellation.</div>
-      <h3>Wireless Earbuds</h3>
-      <p class="price">$39.99</p>
-      <button class="add-cart-btn" aria-label="Add Wireless Earbuds to cart">Add to Cart</button>
-    </div>
-
-  </main>
-
-  <div id="cartPanel" aria-label="Shopping cart" role="region" aria-hidden="true">
-    <button id="closeCartBtn" aria-label="Close Cart">&lt;</button>
-
-    <div id="cartItems" aria-live="polite" aria-relevant="additions removals"></div>
-
-    <div id="discountArea">
-      <input type="text" id="discountCodeInput" placeholder="Discount Code" aria-label="Discount Code Input" />
-      <button id="applyDiscountBtn" aria-label="Apply Discount Code">Apply</button>
-    </div>
-
-    <div id="totalCost">Total Cost: $0.00</div>
-    <div id="youSaved">You saved: $0.00</div>
-
-    <button id="continuePaymentBtn" aria-label="Continue to Payment">Continue to Payment</button>
+<footer class="bottom-bar">
+  <div id="contactSection" role="button" tabindex="0" aria-expanded="false" aria-controls="contactInfoBox">
+    <svg class="gmail-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M12 13.5l8-6V18a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-10l8 6zM12 11L4 5h16l-8 6z"/></svg>
+    Contact
   </div>
-
-  <div class="bottom-bar">
-    <div id="contactSection" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false" aria-controls="contactInfoBox">
-      <svg class="gmail-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 2v.01L12 13 4 6.01V6h16zM4 18V8l8 5 8-5v10H4z"/>
-      </svg>
-      <span>Contact</span>
-    </div>
-    <div id="contactInfoBox" role="dialog" aria-modal="true" aria-labelledby="contactSection">
-      for questions or refunds,<br />
-      trendtolife.co@gmail.com
-    </div>
+  <div id="contactInfoBox" role="region" aria-live="polite" aria-atomic="true">
+    For questions or refunds, trendtolife.co@gmail.com
   </div>
+  <div>© 2025 TrendToLife. All rights reserved.</div>
+</footer>
 
-  <!-- Login modal -->
-  <div id="loginModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="loginTitle" tabindex="-1">
-    <div id="loginModalContent">
-      <button id="closeLoginModal" aria-label="Close Login">&times;</button>
-      <h2 id="loginTitle">Login</h2>
-      <input type="text" placeholder="Username" aria-label="Username" />
-      <input type="password" placeholder="Password" aria-label="Password" />
-      <button id="loginSubmitBtn">Login</button>
-    </div>
-  </div>
+<script>
+  // Sample products - you can replace with your own data
+  const products = [
+    {
+      id: 'p1',
+      name: 'Minimalist Watch',
+      price: 149.99,
+      info: 'Sleek design with leather strap. Water resistant.',
+    },
+    {
+      id: 'p2',
+      name: 'Modern Backpack',
+      price: 89.99,
+      info: 'Spacious and durable, perfect for everyday use.',
+    },
+    {
+      id: 'p3',
+      name: 'Wireless Earbuds',
+      price: 59.99,
+      info: 'Crystal clear sound and long battery life.',
+    },
+  ];
 
-  <script>
-    const cartPanel = document.getElementById('cartPanel');
-    const openCartBtn = document.getElementById('openCartBtn');
-    const closeCartBtn = document.getElementById('closeCartBtn');
-    const cartItemsContainer = document.getElementById('cartItems');
-    const discountInput = document.getElementById('discountCodeInput');
-    const applyDiscountBtn = document.getElementById('applyDiscountBtn');
-    const totalCostEl = document.getElementById('totalCost');
-    const youSavedEl = document.getElementById('youSaved');
-    const continuePaymentBtn = document.getElementById('continuePaymentBtn');
+  const productsContainer = document.getElementById('productsContainer');
+  const cartToggleBtn = document.getElementById('cartToggleBtn');
+  const cartPanel = document.getElementById('cartPanel');
+  const closeCartBtn = document.getElementById('closeCartBtn');
+  const cartItemsContainer = document.getElementById('cartItems');
+  const discountCodeInput = document.getElementById('discountCodeInput');
+  const applyDiscountBtn = document.getElementById('applyDiscountBtn');
+  const totalCostElem = document.getElementById('totalCost');
+  const youSavedElem = document.getElementById('youSaved');
+  const continuePaymentBtn = document.getElementById('continuePaymentBtn');
 
-    const infoButtons = document.querySelectorAll('.info-btn');
+  const contactSection = document.getElementById('contactSection');
+  const contactInfoBox = document.getElementById('contactInfoBox');
 
-    // Contact section
-    const contactSection = document.getElementById('contactSection');
-    const contactInfoBox = document.getElementById('contactInfoBox');
+  let cart = {};
+  let discount = 0;
 
-    // Login modal elements
-    const loginModal = document.getElementById('loginModal');
-    const closeLoginModalBtn = document.getElementById('closeLoginModal');
-    const loginSubmitBtn = document.getElementById('loginSubmitBtn');
+  // Render products
+  function renderProducts() {
+    productsContainer.innerHTML = '';
+    products.forEach(prod => {
+      const prodEl = document.createElement('article');
+      prodEl.className = 'product';
+      prodEl.setAttribute('aria-label', `${prod.name}, price $${prod.price}`);
 
-    // Products data from DOM
-    const products = Array.from(document.querySelectorAll('.product')).map(p => ({
-      id: p.dataset.id,
-      name: p.dataset.name,
-      price: parseFloat(p.dataset.price),
-      element: p
-    }));
+      prodEl.innerHTML = `
+        <button class="info-btn" aria-expanded="false" aria-controls="info-${prod.id}" id="btn-${prod.id}">
+          More Info
+        </button>
+        <div class="info-box" id="info-${prod.id}" role="region" aria-hidden="true">${prod.info}</div>
+        <h3>${prod.name}</h3>
+        <div class="price">$${prod.price.toFixed(2)}</div>
+        <button class="add-cart-btn" aria-label="Add ${prod.name} to cart" data-id="${prod.id}">Add to Cart</button>
+      `;
 
-    // Cart structure: { productId: {product, quantity} }
-    let cart = {};
-    let discount = 0;
+      productsContainer.appendChild(prodEl);
+    });
+  }
 
-    function updateCartUI() {
-      cartItemsContainer.innerHTML = '';
+  // Toggle More Info
+  productsContainer.addEventListener('click', e => {
+    if (e.target.classList.contains('info-btn')) {
+      const btn = e.target;
+      const infoBox = document.getElementById('info-' + btn.id.split('-')[1]);
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
 
-      let total = 0;
-      for (const id in cart) {
-        const item = cart[id];
-        const itemTotalPrice = item.product.price * item.quantity;
-        total += itemTotalPrice;
-
-        const cartItem = document.createElement('div');
-        cartItem.className = 'cart-item';
-
-        const name = document.createElement('div');
-        name.className = 'cart-item-name';
-        name.textContent = item.product.name;
-
-        const qty = document.createElement('div');
-        qty.className = 'cart-item-quantity';
-        qty.textContent = `x${item.quantity}`;
-
-        const price = document.createElement('div');
-        price.className = 'cart-item-price';
-        price.textContent = `$${itemTotalPrice.toFixed(2)}`;
-
-        const trashBtn = document.createElement('button');
-        trashBtn.className = 'trash-btn';
-        trashBtn.setAttribute('aria-label', `Remove ${item.product.name} from cart`);
-        trashBtn.textContent = '🗑️';
-        trashBtn.addEventListener('click', () => {
-          removeFromCart(item.product.id);
-        });
-
-        cartItem.appendChild(name);
-        cartItem.appendChild(qty);
-        cartItem.appendChild(price);
-        cartItem.appendChild(trashBtn);
-
-        cartItemsContainer.appendChild(cartItem);
-      }
-
-      if (total === 0) {
-        totalCostEl.textContent = 'Total Cost: $0.00';
-        youSavedEl.style.display = 'none';
-      } else {
-        const saved = total * discount;
-        const discountedTotal = total - saved;
-        totalCostEl.textContent = `Total Cost: $${discountedTotal.toFixed(2)}`;
-        if (discount > 0) {
-          youSavedEl.style.display = 'block';
-          youSavedEl.textContent = `You saved: $${saved.toFixed(2)}`;
-        } else {
-          youSavedEl.style.display = 'none';
-        }
-      }
+      btn.setAttribute('aria-expanded', String(!expanded));
+      infoBox.style.display = expanded ? 'none' : 'block';
+      infoBox.setAttribute('aria-hidden', String(expanded));
     }
+  });
 
-    function addToCart(productId) {
-      if (cart[productId]) {
-        cart[productId].quantity++;
+  // Add to cart
+  productsContainer.addEventListener('click', e => {
+    if (e.target.classList.contains('add-cart-btn')) {
+      const prodId = e.target.getAttribute('data-id');
+      if (cart[prodId]) {
+        cart[prodId].quantity++;
       } else {
-        const product = products.find(p => p.id === productId);
-        cart[productId] = { product, quantity: 1 };
+        const product = products.find(p => p.id === prodId);
+        cart[prodId] = { ...product, quantity: 1 };
       }
       updateCartUI();
+      openCart();
     }
+  });
 
-    function removeFromCart(productId) {
-      if (cart[productId]) {
-        delete cart[productId];
+  // Open cart panel
+  function openCart() {
+    cartPanel.classList.add('open');
+    cartPanel.setAttribute('aria-hidden', 'false');
+  }
+  // Close cart panel
+  function closeCart() {
+    cartPanel.classList.remove('open');
+    cartPanel.setAttribute('aria-hidden', 'true');
+  }
+
+  cartToggleBtn.addEventListener('click', () => {
+    if (cartPanel.classList.contains('open')) {
+      closeCart();
+    } else {
+      openCart();
+    }
+  });
+  closeCartBtn.addEventListener('click', closeCart);
+
+  // Remove from cart
+  cartItemsContainer.addEventListener('click', e => {
+    if (e.target.classList.contains('trash-btn')) {
+      const prodId = e.target.getAttribute('data-id');
+      if (cart[prodId]) {
+        cart[prodId].quantity--;
+        if (cart[prodId].quantity <= 0) {
+          delete cart[prodId];
+        }
         updateCartUI();
       }
     }
+  });
 
-    // Toggle info box
-    infoButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const controlsId = btn.getAttribute('aria-controls');
-        const infoBox = document.getElementById(controlsId);
-        const expanded = btn.getAttribute('aria-expanded') === 'true';
-        btn.setAttribute('aria-expanded', !expanded);
-        if (infoBox.style.display === 'block') {
-          infoBox.style.display = 'none';
-        } else {
-          infoBox.style.display = 'block';
-        }
-      });
-    });
-
-    // Add to cart button listeners
-    const addCartButtons = document.querySelectorAll('.add-cart-btn');
-    addCartButtons.forEach(button => {
-      button.addEventListener('click', (e) => {
-        const productEl = e.target.closest('.product');
-        const productId = productEl.dataset.id;
-        addToCart(productId);
-        openCartPanel();
-      });
-    });
-
-    // Cart panel open/close
-    function openCartPanel() {
-      cartPanel.classList.add('open');
-      cartPanel.setAttribute('aria-hidden', 'false');
+  // Apply discount code
+  applyDiscountBtn.addEventListener('click', () => {
+    const code = discountCodeInput.value.trim().toUpperCase();
+    if (code === 'RELEASE') {
+      discount = 0.25;
+      alert('Discount applied: 25% off!');
+    } else {
+      discount = 0;
+      alert('Invalid discount code.');
     }
-    function closeCartPanel() {
-      cartPanel.classList.remove('open');
-      cartPanel.setAttribute('aria-hidden', 'true');
+    updateCartUI();
+  });
+
+  // Update cart UI
+  function updateCartUI() {
+    cartItemsContainer.innerHTML = '';
+    let subtotal = 0;
+
+    Object.values(cart).forEach(item => {
+      const itemTotal = item.price * item.quantity;
+      subtotal += itemTotal;
+
+      const itemEl = document.createElement('div');
+      itemEl.className = 'cart-item';
+      itemEl.innerHTML = `
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-quantity">x${item.quantity}</div>
+        <div class="cart-item-price">$${itemTotal.toFixed(2)}</div>
+        <button class="trash-btn" aria-label="Remove one ${item.name}" data-id="${item.id}">&times;</button>
+      `;
+      cartItemsContainer.appendChild(itemEl);
+    });
+
+    if (subtotal === 0) {
+      youSavedElem.style.display = 'none';
+      totalCostElem.textContent = 'Total cost: $0.00';
+      return;
     }
 
-    openCartBtn.addEventListener('click', openCartPanel);
-    closeCartBtn.addEventListener('click', closeCartPanel);
+    if (discount > 0) {
+      const savedAmount = subtotal * discount;
+      youSavedElem.textContent = `You saved: $${savedAmount.toFixed(2)}`;
+      youSavedElem.style.display = 'block';
+      const discountedTotal = subtotal - savedAmount;
+      totalCostElem.textContent = `Total cost: $${discountedTotal.toFixed(2)}`;
+    } else {
+      youSavedElem.style.display = 'none';
+      totalCostElem.textContent = `Total cost: $${subtotal.toFixed(2)}`;
+    }
+  }
 
-    // Discount code logic (only "RETAIL25" is valid for 25% off)
-    applyDiscountBtn.addEventListener('click', () => {
-      const code = discountInput.value.trim().toUpperCase();
-      if (code === 'RETAIL25') {
-        discount = 0.25;
-        alert('Discount applied: 25% off!');
-      } else {
-        discount = 0;
-        alert('Invalid discount code.');
-      }
-      updateCartUI();
-    });
+  // Continue payment - require login
+  continuePaymentBtn.addEventListener('click', () => {
+    alert('Please log in to continue to payment. (Login functionality coming soon)');
+  });
 
-    // Contact section toggle
-    contactSection.addEventListener('click', () => {
-      const expanded = contactSection.getAttribute('aria-expanded') === 'true';
-      contactSection.setAttribute('aria-expanded', !expanded);
-      contactInfoBox.style.display = contactInfoBox.style.display === 'block' ? 'none' : 'block';
+  // Contact info toggle
+  contactSection.addEventListener('click', () => {
+    const expanded = contactSection.getAttribute('aria-expanded') === 'true';
+    contactSection.setAttribute('aria-expanded', String(!expanded));
+    contactInfoBox.style.display = expanded ? 'none' : 'block';
+  });
+  contactSection.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      contactSection.click();
+    }
+  });
+
+  // Social icon clicks - placeholders
+  document.querySelectorAll('.social-icon').forEach(icon => {
+    icon.addEventListener('click', () => {
+      alert(`Link to your ${icon.getAttribute('aria-label')} profile will be added.`);
     });
-    contactSection.addEventListener('keydown', e => {
+    icon.addEventListener('keydown', e => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        contactSection.click();
+        icon.click();
       }
     });
+  });
 
-    // Login modal open/close
-    const loginBtn = document.getElementById('loginBtn');
-    if (loginBtn) {
-      loginBtn.addEventListener('click', () => {
-        loginModal.style.display = 'block';
-        loginModal.setAttribute('aria-hidden', 'false');
-      });
-    }
-    closeLoginModalBtn.addEventListener('click', () => {
-      loginModal.style.display = 'none';
-      loginModal.setAttribute('aria-hidden', 'true');
-    });
+  renderProducts();
+  updateCartUI();
+</script>
 
-  </script>
 </body>
 </html>
