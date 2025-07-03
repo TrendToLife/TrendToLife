@@ -1,199 +1,300 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>TrendToLife</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
+      background: white;
       font-family: Arial, sans-serif;
-      background: #fff;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
     }
-
-    .top-bar {
-      background: #000;
+    .top-bar, .bottom-bar {
+      background: black;
       color: white;
-      padding: 1rem 2rem;
+      padding: 1rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-
-    .social-icons a {
-      margin-right: 10px;
+    .top-bar h1 {
+      margin: 0 auto;
+      font-size: 2rem;
     }
-
-    .social-icons img {
+    .socials {
+      display: flex;
+      gap: 10px;
+    }
+    .socials a img {
       width: 24px;
       height: 24px;
     }
-
-    .logo {
-      font-size: 1.8rem;
-      font-weight: bold;
-    }
-
     .cart-button {
-      background-color: #007bff;
+      background: #007bff;
       color: white;
-      padding: 6px 12px;
       border: none;
+      padding: 8px 12px;
       border-radius: 4px;
       cursor: pointer;
     }
-
     .products {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
+      gap: 20px;
       padding: 2rem;
-      gap: 2rem;
-      flex-grow: 1;
     }
-
     .product {
-      background: #f9f9f9;
-      border: 1px solid #ccc;
+      border: 1px solid #ddd;
       border-radius: 8px;
       padding: 1rem;
-      width: 220px;
+      width: 240px;
       text-align: center;
     }
-
     .product img {
       width: 100%;
-      height: auto;
-      max-height: 180px;
-      object-fit: cover;
-      margin-bottom: 10px;
+      height: 150px;
+      object-fit: contain;
     }
-
-    .price {
-      font-weight: bold;
-      margin: 10px 0;
+    .info-box {
+      display: none;
+      background: white;
+      color: black;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      margin-top: 0.5rem;
     }
-
     .product button {
+      margin-top: 0.5rem;
+      padding: 10px;
       width: 100%;
-      padding: 8px;
-      margin: 5px 0;
       border: none;
       border-radius: 4px;
       cursor: pointer;
     }
-
-    .info-btn {
+    .more-info {
       background: black;
       color: white;
     }
-
-    .add-btn {
+    .add-to-cart {
       background: #007bff;
       color: white;
     }
-
-    .info-box {
-      display: none;
-      background: #fff;
-      border: 1px solid #ccc;
-      padding: 8px;
-      margin-top: 5px;
-      font-size: 0.9rem;
-    }
-
-    .bottom-bar {
-      background: black;
-      color: white;
-      text-align: center;
+    .cart {
+      position: fixed;
+      top: 0;
+      right: -400px;
+      width: 320px;
+      height: 100%;
+      background: #f5f5f5;
+      border-left: 1px solid #ccc;
       padding: 1rem;
-      font-size: 0.85rem;
+      overflow-y: auto;
+      transition: right 0.3s ease;
+      z-index: 1000;
     }
-
+    .cart.open {
+      right: 0;
+    }
+    .cart h2 {
+      margin-bottom: 1rem;
+    }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 5px;
+    }
+    .cart-total {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+    .saved {
+      margin-top: 0.5rem;
+      color: green;
+    }
+    .close-cart {
+      position: absolute;
+      left: 10px;
+      top: 10px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    .code-input {
+      margin-top: 10px;
+      display: flex;
+      gap: 5px;
+    }
+    .payment-box {
+      background: white;
+      margin-top: 1rem;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      font-size: 0.95rem;
+    }
+    .delete-item {
+      background: none;
+      border: none;
+      color: red;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .bottom-bar {
+      font-size: 0.75rem;
+      justify-content: space-between;
+    }
     .contact-link {
       color: white;
       text-decoration: underline;
       cursor: pointer;
     }
-
     .contact-popup {
       display: none;
       position: fixed;
-      bottom: 100px;
+      bottom: 80px;
       left: 50%;
       transform: translateX(-50%);
       background: white;
+      color: black;
       border: 1px solid #ccc;
       padding: 1rem;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      z-index: 10;
-      text-align: center;
-      width: 300px;
+      border-radius: 4px;
+      z-index: 999;
     }
   </style>
 </head>
 <body>
 
-  <!-- TOP BAR -->
   <div class="top-bar">
-    <div class="social-icons">
-      <a href="https://twitter.com/" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="Twitter"></a>
-      <a href="https://instagram.com/" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram"></a>
-      <a href="https://www.youtube.com/" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="YouTube"></a>
-      <a href="https://www.tiktok.com/@trendtolife" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png" alt="TikTok"></a>
+    <div class="socials">
+      <a href="https://twitter.com"><img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="Twitter"></a>
+      <a href="https://instagram.com"><img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" alt="Instagram"></a>
+      <a href="https://tiktok.com/@trendtolife"><img src="https://cdn-icons-png.flaticon.com/512/3046/3046120.png" alt="TikTok"></a>
+      <a href="https://youtube.com"><img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="YouTube"></a>
     </div>
-    <div class="logo">TrendToLife</div>
-    <button class="cart-button">Cart</button>
+    <h1>TrendToLife</h1>
+    <button class="cart-button" onclick="toggleCart()">Cart</button>
   </div>
 
-  <!-- PRODUCTS -->
   <div class="products">
-    <div class="product" data-id="1" data-name="Sleek Watch" data-price="59.99">
-      <img src="https://via.placeholder.com/180x180.png?text=Watch" alt="Sleek Watch">
-      <div class="price">$59.99</div>
-      <button class="info-btn">More Info</button>
-      <div class="info-box">A sleek modern watch with a leather strap and waterproof feature.</div>
-      <button class="add-btn">Add to Cart</button>
+    <div class="product">
+      <img src="https://via.placeholder.com/200x150?text=Sleek+Watch" alt="Sleek Watch">
+      <h3>Sleek Watch</h3>
+      <p><strong>$59.99</strong></p>
+      <button class="more-info" onclick="toggleInfo(this)">More Info</button>
+      <div class="info-box">A sleek modern watch with timeless design.</div>
+      <button class="add-to-cart" onclick="addToCart('Sleek Watch', 59.99)">Add to Cart</button>
     </div>
+    <div class="product">
+      <img src="https://via.placeholder.com/200x150?text=Wireless+Headphones" alt="Wireless Headphones">
+      <h3>Wireless Headphones</h3>
+      <p><strong>$89.99</strong></p>
+      <button class="more-info" onclick="toggleInfo(this)">More Info</button>
+      <div class="info-box">High quality sound with comfort and portability.</div>
+      <button class="add-to-cart" onclick="addToCart('Wireless Headphones', 89.99)">Add to Cart</button>
+    </div>
+    <!-- Add more products below as needed -->
+    <div style="height: 400px;"></div> <!-- Page length filler -->
+  </div>
 
-    <div class="product" data-id="2" data-name="Wireless Headphones" data-price="89.99">
-      <img src="https://via.placeholder.com/180x180.png?text=Headphones" alt="Wireless Headphones">
-      <div class="price">$89.99</div>
-      <button class="info-btn">More Info</button>
-      <div class="info-box">Noise-cancelling wireless headphones with Bluetooth 5.0 support.</div>
-      <button class="add-btn">Add to Cart</button>
+  <div class="cart" id="cart">
+    <span class="close-cart" onclick="toggleCart()">&lt;</span>
+    <h2>Your Cart</h2>
+    <div id="cart-items"></div>
+    <div class="cart-total" id="cart-total">Total: $0.00</div>
+    <div class="saved" id="saved" style="display:none;"></div>
+    <div class="code-input">
+      <input type="text" id="discount-code" placeholder="Enter code">
+      <button onclick="applyDiscount()">Apply</button>
+    </div>
+    <div class="payment-box">
+      Send me an email telling me what you want. I will then send you a link to my bank account so you can send me the money. Just provide what you bought and if you used a code.
     </div>
   </div>
 
-  <!-- CONTACT POPUP -->
-  <div class="contact-popup" id="contactPopup">
-    <p><strong>For questions or refunds</strong></p>
-    <p>Email: trendtolife.co@gmail.com</p>
-  </div>
-
-  <!-- BOTTOM BAR -->
   <div class="bottom-bar">
-    <span class="contact-link" onclick="document.getElementById('contactPopup').style.display='block'">📧 Contact</span>
+    <div class="contact-link" onclick="showContact()">📧 Contact</div>
     <div>© 2025 TrendToLife. All rights reserved.</div>
   </div>
 
+  <div class="contact-popup" id="contactPopup">
+    For questions or refunds: <strong>trendtolife.co@gmail.com</strong>
+  </div>
+
   <script>
-    // Toggle info boxes
-    document.querySelectorAll('.info-btn').forEach(button => {
-      button.addEventListener('click', () => {
-        const infoBox = button.nextElementSibling;
-        infoBox.style.display = infoBox.style.display === 'block' ? 'none' : 'block';
-      });
-    });
+    let cart = {};
+    let discountApplied = false;
+
+    function toggleCart() {
+      document.getElementById('cart').classList.toggle('open');
+    }
+
+    function toggleInfo(btn) {
+      const info = btn.nextElementSibling;
+      info.style.display = info.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function addToCart(name, price) {
+      if (cart[name]) {
+        cart[name].qty += 1;
+      } else {
+        cart[name] = { price, qty: 1 };
+      }
+      updateCart();
+      document.getElementById('cart').classList.add('open');
+    }
+
+    function updateCart() {
+      const cartItems = document.getElementById('cart-items');
+      const cartTotal = document.getElementById('cart-total');
+      const saved = document.getElementById('saved');
+      cartItems.innerHTML = '';
+      let total = 0;
+      for (const item in cart) {
+        const entry = cart[item];
+        total += entry.price * entry.qty;
+        cartItems.innerHTML += `
+          <div class="cart-item">
+            <span>${item} x${entry.qty}</span>
+            <span>$${(entry.price * entry.qty).toFixed(2)}</span>
+            <button class="delete-item" onclick="removeItem('${item}')">🗑</button>
+          </div>`;
+      }
+      let finalTotal = total;
+      if (discountApplied) {
+        const savedAmount = total * 0.25;
+        finalTotal = total - savedAmount;
+        saved.style.display = 'block';
+        saved.textContent = `You saved: $${savedAmount.toFixed(2)}`;
+      } else {
+        saved.style.display = 'none';
+      }
+      cartTotal.textContent = `Total: $${finalTotal.toFixed(2)}`;
+    }
+
+    function removeItem(name) {
+      delete cart[name];
+      updateCart();
+    }
+
+    function applyDiscount() {
+      const code = document.getElementById('discount-code').value.trim();
+      if (code === "RELEASE") {
+        discountApplied = true;
+        updateCart();
+      }
+    }
+
+    function showContact() {
+      const popup = document.getElementById('contactPopup');
+      popup.style.display = 'block';
+      setTimeout(() => popup.style.display = 'none', 5000);
+    }
   </script>
 
 </body>
