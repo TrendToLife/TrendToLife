@@ -1,496 +1,472 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>TrendToLife</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    /* Reset */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TrendToLife</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background-color: white;
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .top-bar,
+  .bottom-bar {
+    background-color: black;
+    color: white;
+    width: 100%;
+    padding: 1rem;
+  }
+  .top-bar {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    position: relative;
+  }
+  /* Top right with socials and cart */
+  .top-right {
+    position: fixed;
+    top: 12px;
+    right: 10px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    z-index: 1200;
+    flex-wrap: nowrap;
+  }
+  /* Social icons */
+  .social-icon svg {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  .social-icon:hover svg {
+    transform: scale(1.1);
+  }
 
-    body {
-      font-family: Arial, sans-serif;
-      background: white;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      padding-top: 60px; /* to avoid top-bar overlap */
-      padding-bottom: 50px; /* for footer spacing */
-    }
+  /* Cart button */
+  .cart-button {
+    background-color: #007bff;
+    border: none;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    user-select: none;
+    white-space: nowrap;
+    transition: background-color 0.3s ease;
+  }
+  .cart-button:hover {
+    background-color: #0056b3;
+  }
 
-    /* Top bar */
-    .top-bar {
-      background: black;
-      color: white;
-      text-align: center;
-      padding: 1rem;
-      font-size: 2rem;
-      font-weight: bold;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 1100;
-    }
+  /* Content and page length */
+  .content {
+    flex: 1;
+    padding: 2rem;
+    margin-top: 3.5rem; /* leave space for fixed top-right */
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .spacer {
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #333;
+  }
 
-    /* Top right container for socials + cart */
-    .top-right {
-      position: fixed;
-      top: 12px;
-      right: 10px;
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      z-index: 1200;
-    }
+  /* Bottom bar */
+  .bottom-bar {
+    font-size: 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
-    /* Cart button */
-    .cart-button {
-      background-color: #007bff;
-      border: none;
-      color: white;
-      padding: 8px 14px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 1rem;
-      user-select: none;
-    }
+  /* Cart slide panel */
+  #cartPanel {
+    position: fixed;
+    top: 0;
+    right: -320px; /* hidden by default */
+    width: 320px;
+    height: 100vh;
+    background: #f9f9f9;
+    box-shadow: -3px 0 8px rgba(0,0,0,0.2);
+    padding: 1rem;
+    transition: right 0.3s ease;
+    z-index: 1300;
+    display: flex;
+    flex-direction: column;
+  }
+  #cartPanel.open {
+    right: 0;
+  }
+  #cartPanel .close-cart {
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    user-select: none;
+  }
+  #cartItems {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+  }
+  .cart-item {
+    background: white;
+    padding: 0.5rem;
+    margin-bottom: 0.8rem;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .cart-item button.delete-btn {
+    background: transparent;
+    border: none;
+    color: #c00;
+    font-weight: bold;
+    font-size: 1.1rem;
+    cursor: pointer;
+  }
+  #continuePayment {
+    background-color: #007bff;
+    border: none;
+    color: white;
+    padding: 10px;
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    user-select: none;
+  }
+  #continuePayment:hover {
+    background-color: #0056b3;
+  }
 
-    /* Social icons style */
-    .social-icon {
-      width: 26px;
-      height: 26px;
-      cursor: pointer;
-      display: inline-block;
-    }
+  /* Black buttons above each "Add to Cart" */
+  .product {
+    margin-bottom: 2rem;
+  }
+  .product button.info-btn {
+    background-color: black;
+    color: white;
+    width: 100%;
+    padding: 8px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 4px 4px 0 0;
+    cursor: pointer;
+    user-select: none;
+  }
+  .product button.info-btn:hover {
+    background-color: #222;
+  }
+  .product button.add-cart-btn {
+    background-color: #007bff;
+    color: white;
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 0 0 4px 4px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .product button.add-cart-btn:hover {
+    background-color: #0056b3;
+  }
 
-    /* Content area */
-    .content {
-      max-width: 900px;
-      margin: 20px auto 40px;
-      padding: 0 15px;
-      flex: 1;
-    }
+  /* Info box for each product */
+  .info-box {
+    background: white;
+    border: 1px solid #ccc;
+    padding: 8px;
+    margin-bottom: 0.5rem;
+    display: none;
+    font-size: 0.9rem;
+  }
 
-    .spacer {
-      margin-bottom: 2rem;
-      font-size: 1.1rem;
-      line-height: 1.6;
-      color: #333;
-    }
+  /* Modal styles */
+  .modal {
+    display: none; /* Hidden by default */
+    position: fixed; 
+    z-index: 1500; /* Above cart & everything */
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.5); /* Black transparent bg */
+  }
 
-    /* Cart panel */
-    .cart-panel {
-      position: fixed;
-      top: 60px; /* below top bar */
-      right: -320px; /* hidden by default */
-      width: 300px;
-      height: calc(100vh - 60px);
-      background: #f9f9f9;
-      box-shadow: -2px 0 6px rgba(0,0,0,0.15);
-      padding: 20px;
-      transition: right 0.3s ease;
-      z-index: 1500;
-      display: flex;
-      flex-direction: column;
-    }
+  .modal-content {
+    background-color: white;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 6px;
+    width: 320px;
+    max-width: 90%;
+    text-align: center;
+  }
 
-    .cart-panel.open {
-      right: 0;
-    }
+  .modal-content h2 {
+    margin-bottom: 1rem;
+  }
 
-    .cart-panel header {
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      margin-bottom: 15px;
-    }
+  .modal-content input {
+    width: 90%;
+    padding: 8px 10px;
+    margin: 0.5rem 0;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
 
-    .cart-close-btn {
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      font-weight: 700;
-      user-select: none;
-    }
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: -10px;
+  }
 
-    .cart-items {
-      flex: 1;
-      overflow-y: auto;
-      margin-bottom: 15px;
-    }
+  .close:hover {
+    color: black;
+  }
 
-    .cart-item {
-      background: white;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 6px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 0 3px rgba(0,0,0,0.1);
-    }
-
-    .cart-item-name {
-      font-size: 0.95rem;
-      font-weight: 600;
-      max-width: 160px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .cart-delete-btn {
-      background: none;
-      border: none;
-      color: #cc0000;
-      cursor: pointer;
-      font-size: 1.2rem;
-      user-select: none;
-      padding: 0 6px;
-      line-height: 1;
-    }
-
-    /* Continue to payment button */
-    .payment-btn {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      padding: 10px;
-      font-weight: 600;
-      border-radius: 5px;
-      cursor: pointer;
-      user-select: none;
-      font-size: 1rem;
-    }
-
-    /* Black button above add to cart */
-    .info-btn {
-      background: black;
-      color: white;
-      border: none;
-      width: 100%;
-      padding: 8px 0;
-      margin-bottom: 5px;
-      cursor: pointer;
-      font-weight: 600;
-      border-radius: 4px;
-      user-select: none;
-    }
-
-    /* Add to cart buttons */
-    .add-to-cart-btn {
-      background: #007bff;
-      color: white;
-      border: none;
-      width: 100%;
-      padding: 8px 0;
-      cursor: pointer;
-      font-weight: 600;
-      border-radius: 4px;
-      user-select: none;
-    }
-
-    /* Info box for items (hidden by default) */
-    .item-info {
-      display: none;
-      background: white;
-      border: 1px solid #ddd;
-      padding: 10px;
-      margin-top: 5px;
-      border-radius: 5px;
-      font-size: 0.9rem;
-      color: #333;
-    }
-
-    /* Footer bar */
-    .bottom-bar {
-      background-color: black;
-      color: white;
-      font-size: 0.75rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.75rem 1rem;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      z-index: 1100;
-      flex-wrap: wrap;
-    }
-
-    /* Gmail contact button */
-    .gmail-contact {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .gmail-icon {
-      width: 20px;
-      height: 20px;
-      fill: #D14836; /* Gmail red */
-    }
-
-    /* Contact modal */
-    #contactModal {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: white;
-      border: 2px solid #ccc;
-      padding: 20px;
-      z-index: 2000;
-      max-width: 300px;
-      text-align: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      border-radius: 8px;
-    }
-
-    #contactModal p {
-      font-size: 1rem;
-      color: #333;
-      white-space: pre-line;
-    }
-
-    #contactModal .close-btn {
-      margin-top: 15px;
-      background: black;
-      color: white;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: 600;
-      user-select: none;
-    }
-  </style>
+</style>
 </head>
 <body>
 
-  <div class="top-bar">TrendToLife</div>
+  <div class="top-bar">
+    TrendToLife
+    <div class="top-right">
+      <a href="https://twitter.com/yourprofile" target="_blank" aria-label="Twitter" title="Twitter" class="social-icon" id="twitter">
+        <svg viewBox="0 0 24 24" fill="#1DA1F2" xmlns="http://www.w3.org/2000/svg"><path d="M23.954 4.569a10 10 0 0 1-2.825.775 4.958 4.958 0 0 0 2.163-2.723c-.95.555-2.005.959-3.127 1.184a4.92 4.92 0 0 0-8.384 4.482A13.978 13.978 0 0 1 1.671 3.149a4.917 4.917 0 0 0 1.523 6.573 4.903 4.903 0 0 1-2.228-.616c-.054 2.28 1.581 4.415 3.949 4.89a4.935 4.935 0 0 1-2.224.085 4.927 4.927 0 0 0 4.604 3.417A9.867 9.867 0 0 1 0 19.54a13.94 13.94 0 0 0 7.548 2.209c9.056 0 14.01-7.5 14.01-14.01 0-.213-.005-.425-.015-.636A10.012 10.012 0 0 0 24 4.59z"/></svg>
+      </a>
 
-  <!-- Social icons and cart button top-right -->
-  <div class="top-right">
-    <a href="https://twitter.com/yourprofile" target="_blank" aria-label="Twitter" title="Twitter" class="social-icon" id="twitter">
-      <svg viewBox="0 0 24 24" fill="#1DA1F2" xmlns="http://www.w3.org/2000/svg"><path d="M23.954 4.569a10 10 0 0 1-2.825.775 4.958 4.958 0 0 0 2.163-2.723c-.95.555-2.005.959-3.127 1.184a4.92 4.92 0 0 0-8.384 4.482A13.978 13.978 0 0 1 1.671 3.149a4.917 4.917 0 0 0 1.523 6.573 4.903 4.903 0 0 1-2.228-.616c-.054 2.28 1.581 4.415 3.949 4.89a4.935 4.935 0 0 1-2.224.085 4.927 4.927 0 0 0 4.604 3.417A9.867 9.867 0 0 1 0 19.54a13.94 13.94 0 0 0 7.548 2.209c9.056 0 14.01-7.5 14.01-14.01 0-.213-.005-.425-.015-.636A10.012 10.012 0 0 0 24 4.59z"/></svg>
-    </a>
-    <a href="https://www.tiktok.com/@yourprofile" target="_blank" aria-label="TikTok" title="TikTok" class="social-icon" id="tiktok">
-      <svg viewBox="0 0 24 24" fill="#000000" xmlns="http://www.w3.org/2000/svg">
-        <path fill="#69C9D0" d="M9.5 7.5v9a3.5 3.5 0 1 0 3.5-3.5v-2a7 7 0 0 0 4 1.5V8a5.5 5.5 0 0 1-7.5-0.5z"/>
-      </svg>
-    </a>
-    <a href="https://www.instagram.com/yourprofile" target="_blank" aria-label="Instagram" title="Instagram" class="social-icon" id="instagram">
-      <svg viewBox="0 0 24 24" fill="#E1306C" xmlns="http://www.w3.org/2000/svg">
-        <path d="M7 2C4.243 2 2 4.243 2 7v10c0 2.757 2.243 5 5 5h10c2.757 0 5-2.243 5-5V7c0-2.757-2.243-5-5-5H7zm8 2a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm-5 3a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
-      </svg>
-    </a>
-    <a href="https://www.youtube.com/channel/yourchannel" target="_blank" aria-label="YouTube" title="YouTube" class="social-icon" id="youtube">
-      <svg viewBox="0 0 24 24" fill="#FF0000" xmlns="http://www.w3.org/2000/svg">
-        <path d="M10 15l5.19-3L10 9v6zm11-3c0-1.104-.9-2-2-2H5c-1.104 0-2 .896-2 2v2c0 1.104.9 2 2 2h14c1.104 0 2-.896 2-2v-2z"/>
-      </svg>
-    </a>
-    <button class="cart-button" id="cartToggle">Cart</button>
+      <a href="https://www.tiktok.com/@yourprofile" target="_blank" aria-label="TikTok" title="TikTok" class="social-icon" id="tiktok">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9.5 3.25V15.75C9.5 17.8211 11.1789 19.5 13.25 19.5C15.3211 19.5 17 17.8211 17 15.75V7.25H15.25V15.75C15.25 16.7165 14.4665 17.5 13.5 17.5C12.5335 17.5 11.75 16.7165 11.75 15.75V5.75H9.5Z" fill="#69C9D0"/>
+          <path d="M15 6.25C16.5188 6.25 18 7.03438 19.125 8.325V7.25H20.75V11.5H19.125V9.875C18.166 8.75875 16.6838 8.25 15 8.25V6.25Z" fill="#000000"/>
+        </svg>
+      </a>
+
+      <a href="https://www.instagram.com/yourprofile" target="_blank" aria-label="Instagram" title="Instagram" class="social-icon" id="instagram">
+        <svg viewBox="0 0 24 24" fill="#E1306C" xmlns="http://www.w3.org/2000/svg">
+          <path d="M7 2C4.243 2 2 4.243 2 7v10c0 2.757 2.243 5 5 5h10c2.757 0 5-2.243 5-5V7c0-2.757-2.243-5-5-5H7zm8 2a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm-5 3a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
+        </svg>
+      </a>
+
+      <a href="https://www.youtube.com/channel/yourchannel" target="_blank" aria-label="YouTube" title="YouTube" class="social-icon" id="youtube">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="24" height="24" rx="4" fill="#FF0000"/>
+          <path d="M10 15L15.19 12L10 9V15Z" fill="white"/>
+        </svg>
+      </a>
+
+      <button class="cart-button" id="cartToggle">Cart</button>
+    </div>
   </div>
 
-  <div class="content" id="productList">
-    <!-- Example products with info and add to cart -->
-    <div class="spacer product" data-name="Minimalist Watch" data-info="A sleek, modern minimalist watch with leather strap.">
-      <button class="info-btn">Info</button>
-      <button class="add-to-cart-btn">Add to Cart</button>
-      <div class="item-info"></div>
+  <div class="content">
+    <!-- Example product list -->
+    <div class="product" data-name="Product 1" data-price="29.99" data-info="This is info about Product 1.">
+      <button class="info-btn">More Info</button>
+      <button class="add-cart-btn">Add to Cart - $29.99</button>
+      <div class="info-box"></div>
     </div>
-    <div class="spacer product" data-name="Eco-friendly Backpack" data-info="Durable, stylish backpack made from recycled materials.">
-      <button class="info-btn">Info</button>
-      <button class="add-to-cart-btn">Add to Cart</button>
-      <div class="item-info"></div>
+
+    <div class="product" data-name="Product 2" data-price="49.99" data-info="This is info about Product 2.">
+      <button class="info-btn">More Info</button>
+      <button class="add-cart-btn">Add to Cart - $49.99</button>
+      <div class="info-box"></div>
     </div>
-    <div class="spacer product" data-name="Wireless Earbuds" data-info="High-quality sound, noise cancellation earbuds.">
-      <button class="info-btn">Info</button>
-      <button class="add-to-cart-btn">Add to Cart</button>
-      <div class="item-info"></div>
+
+    <div class="product" data-name="Product 3" data-price="19.99" data-info="This is info about Product 3.">
+      <button class="info-btn">More Info</button>
+      <button class="add-cart-btn">Add to Cart - $19.99</button>
+      <div class="info-box"></div>
     </div>
-    <div class="spacer product" data-name="Smart LED Lamp" data-info="Adjust brightness and colors with your smartphone.">
-      <button class="info-btn">Info</button>
-      <button class="add-to-cart-btn">Add to Cart</button>
-      <div class="item-info"></div>
+
+    <div class="spacer">
+      <p>Lots of content here to make the page longer. Scroll down to test the fixed cart and buttons.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin in turpis at ligula suscipit feugiat. Nulla facilisi.</p>
+      <p>More content repeated many times...</p>
+      <p>More content repeated many times...</p>
+      <p>More content repeated many times...</p>
+      <p>More content repeated many times...</p>
+      <p>More content repeated many times...</p>
+      <p>More content repeated many times...</p>
+      <p>More content repeated many times...</p>
     </div>
-    <div class="spacer product" data-name="Yoga Mat" data-info="Eco-friendly, non-slip yoga mat for your workouts.">
-      <button class="info-btn">Info</button>
-      <button class="add-to-cart-btn">Add to Cart</button>
-      <div class="item-info"></div>
-    </div>
-    <!-- More placeholder content to lengthen page -->
-    <div class="spacer">TrendToLife is your home for modern, minimal trends.</div>
-    <div class="spacer">Keep scrolling to discover amazing products.</div>
   </div>
 
-  <!-- Cart sliding panel -->
-  <div class="cart-panel" id="cartPanel" aria-label="Shopping Cart" role="region" aria-hidden="true">
-    <header>
-      <button class="cart-close-btn" id="cartCloseBtn" aria-label="Close Cart">&lt;</button>
-      <h2 style="margin-left:10px;">Your Cart</h2>
-    </header>
-    <div class="cart-items" id="cartItems"></div>
-    <button class="payment-btn" id="paymentBtn">Continue to Payment</button>
-  </div>
-
-  <!-- Bottom bar -->
   <div class="bottom-bar">
-    <div class="gmail-contact" id="gmailContactBtn" role="button" tabindex="0" aria-label="Contact Email">
-      <svg class="gmail-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 2-8 5-8-5h16Zm0 12H4V8l8 5 8-5v10Z" />
-      </svg>
-      <span style="color:white; font-weight:600;">Contact</span>
+    <div>
+      <svg xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;" width="20" height="20" fill="#D44638" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4S14.21 4 12 4 8 5.79 8 8s1.79 4 4 4z"/><path d="M19 22H5v-1.5c0-2.5 5-3.5 7-3.5s7 1 7 3.5V22z"/></svg>
+      <span style="margin-left: 8px; cursor:pointer;" id="contactEmailBtn">Contact</span>
     </div>
-    <div>© 2025 TrendToLife. All rights reserved.</div>
+    <div>&copy; 2025 TrendToLife</div>
   </div>
 
-  <!-- Contact modal -->
-  <div id="contactModal" role="dialog" aria-modal="true" aria-labelledby="contactTitle" aria-describedby="contactDesc">
-    <p id="contactDesc">For questions or refunds,
-trendtolife.co@gmail.com</p>
-    <button class="close-btn" id="contactModalClose">Close</button>
+  <!-- Cart panel -->
+  <div id="cartPanel">
+    <div class="close-cart" id="closeCart">&lt;</div>
+    <h3>Your Cart</h3>
+    <div id="cartItems">
+      <p>Your cart is empty.</p>
+    </div>
+    <button id="continuePayment">Continue to Payment</button>
   </div>
 
-  <script>
-    // Elements
-    const cartToggle = document.getElementById('cartToggle');
-    const cartPanel = document.getElementById('cartPanel');
-    const cartCloseBtn = document.getElementById('cartCloseBtn');
-    const cartItemsContainer = document.getElementById('cartItems');
-    const paymentBtn = document.getElementById('paymentBtn');
-    const gmailContactBtn = document.getElementById('gmailContactBtn');
-    const contactModal = document.getElementById('contactModal');
-    const contactModalClose = document.getElementById('contactModalClose');
+  <!-- Contact Info Modal -->
+  <div id="contactModal" class="modal">
+    <div class="modal-content">
+      <span id="closeContact" class="close">&times;</span>
+      <p>For questions or refunds, trendtolife.co@gmail.com</p>
+    </div>
+  </div>
 
-    // Show/hide cart panel
-    cartToggle.addEventListener('click', () => {
-      if (cartPanel.classList.contains('open')) {
-        cartPanel.classList.remove('open');
-        cartPanel.setAttribute('aria-hidden', 'true');
+  <!-- Login Modal -->
+  <div id="loginModal" class="modal">
+    <div class="modal-content">
+      <span id="closeLogin" class="close">&times;</span>
+      <h2>Login to Continue</h2>
+      <form id="loginForm">
+        <input type="email" id="loginEmail" placeholder="Email" required />
+        <input type="password" id="loginPassword" placeholder="Password" required />
+        <button type="submit" class="cart-button">Login</button>
+      </form>
+    </div>
+  </div>
+
+<script>
+  // Toggle cart panel open/close
+  const cartToggleBtn = document.getElementById('cartToggle');
+  const cartPanel = document.getElementById('cartPanel');
+  const closeCartBtn = document.getElementById('closeCart');
+  const cartItemsDiv = document.getElementById('cartItems');
+
+  cartToggleBtn.addEventListener('click', () => {
+    cartPanel.classList.add('open');
+  });
+
+  closeCartBtn.addEventListener('click', () => {
+    cartPanel.classList.remove('open');
+  });
+
+  // Products info toggling and add to cart
+  const products = document.querySelectorAll('.product');
+
+  products.forEach(product => {
+    const infoBtn = product.querySelector('.info-btn');
+    const addCartBtn = product.querySelector('.add-cart-btn');
+    const infoBox = product.querySelector('.info-box');
+
+    infoBtn.addEventListener('click', () => {
+      if (infoBox.style.display === 'block') {
+        infoBox.style.display = 'none';
       } else {
-        cartPanel.classList.add('open');
-        cartPanel.setAttribute('aria-hidden', 'false');
+        infoBox.textContent = product.getAttribute('data-info');
+        infoBox.style.display = 'block';
       }
     });
 
-    cartCloseBtn.addEventListener('click', () => {
-      cartPanel.classList.remove('open');
-      cartPanel.setAttribute('aria-hidden', 'true');
+    addCartBtn.addEventListener('click', () => {
+      addToCart(product.getAttribute('data-name'), parseFloat(product.getAttribute('data-price')));
     });
+  });
 
-    // Cart data structure
-    let cart = [];
+  // Cart data & functions
+  let cart = [];
 
-    // Add event listeners to product buttons
-    document.querySelectorAll('.product').forEach((productEl) => {
-      const infoBtn = productEl.querySelector('.info-btn');
-      const addToCartBtn = productEl.querySelector('.add-to-cart-btn');
-      const itemInfo = productEl.querySelector('.item-info');
-      const productName = productEl.getAttribute('data-name');
-      const productInfoText = productEl.getAttribute('data-info');
-
-      // Set info text
-      itemInfo.textContent = productInfoText;
-
-      // Toggle info box on info button click
-      infoBtn.addEventListener('click', () => {
-        if (itemInfo.style.display === 'block') {
-          itemInfo.style.display = 'none';
-        } else {
-          itemInfo.style.display = 'block';
-        }
-      });
-
-      // Add to cart button
-      addToCartBtn.addEventListener('click', () => {
-        addToCart(productName);
-      });
-    });
-
-    // Add item to cart
-    function addToCart(name) {
-      // Check if exists in cart
-      const existing = cart.find(item => item.name === name);
-      if (existing) {
-        existing.qty += 1;
-      } else {
-        cart.push({name, qty: 1});
-      }
-      renderCart();
-      // Open cart panel automatically
-      cartPanel.classList.add('open');
-      cartPanel.setAttribute('aria-hidden', 'false');
+  function renderCart() {
+    cartItemsDiv.innerHTML = '';
+    if(cart.length === 0){
+      cartItemsDiv.innerHTML = '<p>Your cart is empty.</p>';
+      return;
     }
+    cart.forEach((item, index) => {
+      const div = document.createElement('div');
+      div.classList.add('cart-item');
+      div.innerHTML = `
+        <span>${item.name} - $${item.price.toFixed(2)}</span>
+        <button class="delete-btn" data-index="${index}" aria-label="Remove ${item.name}">&times;</button>
+      `;
+      cartItemsDiv.appendChild(div);
+    });
 
-    // Remove item from cart
-    function removeFromCart(name) {
-      cart = cart.filter(item => item.name !== name);
-      renderCart();
-    }
-
-    // Render cart items in panel
-    function renderCart() {
-      cartItemsContainer.innerHTML = '';
-      if (cart.length === 0) {
-        cartItemsContainer.textContent = 'Your cart is empty.';
-        return;
-      }
-
-      cart.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'cart-item';
-
-        const nameSpan = document.createElement('span');
-        nameSpan.className = 'cart-item-name';
-        nameSpan.textContent = `${item.name} ×${item.qty}`;
-
-        const delBtn = document.createElement('button');
-        delBtn.className = 'cart-delete-btn';
-        delBtn.title = `Remove ${item.name}`;
-        delBtn.innerHTML = '🗑️';
-        delBtn.addEventListener('click', () => removeFromCart(item.name));
-
-        div.appendChild(nameSpan);
-        div.appendChild(delBtn);
-
-        cartItemsContainer.appendChild(div);
+    // Attach delete button events
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const idx = parseInt(e.target.getAttribute('data-index'));
+        cart.splice(idx,1);
+        renderCart();
       });
-    }
-
-    // Payment button placeholder
-    paymentBtn.addEventListener('click', () => {
-      alert('Checkout functionality will be added later!');
     });
+  }
 
-    // Gmail contact modal toggle
-    gmailContactBtn.addEventListener('click', () => {
-      contactModal.style.display = 'block';
-    });
-    contactModalClose.addEventListener('click', () => {
-      contactModal.style.display = 'none';
-    });
+  function addToCart(name, price) {
+    cart.push({name, price});
+    renderCart();
+    cartPanel.classList.add('open');
+  }
 
-    // Close modal if clicking outside content
-    window.addEventListener('click', (e) => {
-      if (e.target === contactModal) {
-        contactModal.style.display = 'none';
-      }
-    });
+  renderCart();
 
-  </script>
+  // Contact modal open/close
+  const contactBtn = document.getElementById('contactEmailBtn');
+  const contactModal = document.getElementById('contactModal');
+  const closeContact = document.getElementById('closeContact');
+
+  contactBtn.addEventListener('click', () => {
+    contactModal.style.display = 'block';
+  });
+
+  closeContact.addEventListener('click', () => {
+    contactModal.style.display = 'none';
+  });
+
+  window.addEventListener('click', (e) => {
+    if(e.target === contactModal) contactModal.style.display = 'none';
+    if(e.target === loginModal) loginModal.style.display = 'none';
+  });
+
+  // Login modal open on "Continue to Payment"
+  const continuePaymentBtn = document.getElementById('continuePayment');
+  const loginModal = document.getElementById('loginModal');
+  const closeLogin = document.getElementById('closeLogin');
+  const loginForm = document.getElementById('loginForm');
+
+  continuePaymentBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    loginModal.style.display = 'block';
+  });
+
+  closeLogin.addEventListener('click', () => {
+    loginModal.style.display = 'none';
+  });
+
+  loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value;
+    // For demo just alert success & close modal
+    alert(`Logged in as ${email}. Proceeding to payment...`);
+    loginModal.style.display = 'none';
+
+    // TODO: Here you can redirect to payment or show payment UI
+  });
+</script>
 </body>
 </html>
