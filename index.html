@@ -31,15 +31,17 @@
       align-items: center;
       justify-content: center;
       font-weight: bold;
+      font-size: 1rem;
+      position: relative;
     }
 
     .top-bar {
       font-size: 2rem;
-      position: relative;
+      font-weight: bold;
     }
 
     .bottom-bar {
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       justify-content: space-between;
     }
 
@@ -92,6 +94,7 @@
       flex-direction: column;
       align-items: center;
       background: #fafafa;
+      word-wrap: break-word;
     }
 
     .product img {
@@ -133,7 +136,8 @@
       overflow-y: auto;
       width: 100%;
       box-sizing: border-box;
-      white-space: normal; /* allow text wrap */
+      white-space: normal; /* wrap text */
+      word-break: break-word; /* break long words */
     }
 
     .product .price {
@@ -195,12 +199,12 @@
       margin-bottom: 0.7rem;
       border-bottom: 1px solid #ddd;
       padding-bottom: 0.4rem;
+      word-break: break-word;
     }
 
     .cart-item-name {
       flex: 1;
       font-weight: 600;
-      word-break: break-word;
     }
 
     .cart-item-qty {
@@ -327,13 +331,12 @@
       </a>
     </div>
     TrendToLife
-    <button id="cartButton" aria-label="Open shopping cart">Cart</button>
+    <button id="cartButton" aria-label="Toggle shopping cart">Cart</button>
   </div>
 
-  <div class="content" id="productList">
-    <!-- Example products -->
+  <div class="content" role="main">
     <div class="product" data-id="1" data-name="Sleek Watch" data-price="59.99">
-      <img src="https://via.placeholder.com/180?text=Sleek+Watch" alt="Sleek Watch" />
+      <img src="https://via.placeholder.com/180?text=Watch" alt="Sleek Watch" />
       <div class="price">$59.99</div>
       <button class="info-btn" aria-expanded="false">More Info</button>
       <div class="info-box" aria-hidden="true">A modern watch with leather strap and waterproof design.</div>
@@ -380,11 +383,12 @@
     </div>
   </div>
 
-  <div class="bottom-bar">
+  <div class="bottom-bar" role="contentinfo">
     <div class="gmail-contact" id="gmailContact" tabindex="0" role="button" aria-pressed="false" aria-label="Contact via email">
       <img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" alt="Gmail logo" />
       Contact
     </div>
+    <div style="font-size:0.9rem;">© 2025 TrendToLife</div>
   </div>
 
   <script>
@@ -518,7 +522,6 @@
     // Payment button
     paymentBtn.addEventListener('click', () => {
       paymentMessage.style.display = 'block';
-      // Clear cart and inputs optionally if you want here
     });
 
     // Gmail contact click shows message
