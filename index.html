@@ -2,10 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>TrendToLife</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    /* Basic resets and styling */
     * {
       margin: 0;
       padding: 0;
@@ -14,520 +13,186 @@
 
     body {
       font-family: Arial, sans-serif;
-      background: white;
+      background: #fff;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
     }
 
-    /* Top and Bottom black bars */
-    .top-bar,
-    .bottom-bar {
-      background: black;
-      color: white;
-      width: 100%;
-      padding: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      font-size: 1rem;
-      position: relative;
-    }
-
     .top-bar {
-      font-size: 2rem;
-      font-weight: bold;
-    }
-
-    .bottom-bar {
-      font-size: 0.8rem;
-      justify-content: space-between;
-    }
-
-    /* Social icons container top left */
-    .socials {
-      position: absolute;
-      left: 1rem;
+      background: #000;
+      color: white;
+      padding: 1rem 2rem;
       display: flex;
-      gap: 0.6rem;
-      top: 50%;
-      transform: translateY(-50%);
+      justify-content: space-between;
+      align-items: center;
     }
-    .socials a img {
+
+    .social-icons a {
+      margin-right: 10px;
+    }
+
+    .social-icons img {
       width: 24px;
       height: 24px;
-      cursor: pointer;
     }
 
-    /* Cart button top right */
-    #cartButton {
-      position: absolute;
-      right: 1rem;
-      top: 50%;
-      transform: translateY(-50%);
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+
+    .cart-button {
       background-color: #007bff;
       color: white;
-      border: none;
       padding: 6px 12px;
-      font-size: 0.9rem;
+      border: none;
       border-radius: 4px;
       cursor: pointer;
     }
 
-    /* Content and products */
-    .content {
-      flex: 1;
+    .products {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       padding: 2rem;
-      max-width: 900px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
+      gap: 2rem;
+      flex-grow: 1;
     }
 
     .product {
+      background: #f9f9f9;
       border: 1px solid #ccc;
+      border-radius: 8px;
       padding: 1rem;
-      border-radius: 6px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background: #fafafa;
-      word-wrap: break-word;
+      width: 220px;
+      text-align: center;
     }
 
     .product img {
       width: 100%;
-      max-width: 180px;
-      border-radius: 6px;
-      margin-bottom: 1rem;
+      height: auto;
+      max-height: 180px;
+      object-fit: cover;
+      margin-bottom: 10px;
     }
 
-    .product .info-btn,
-    .product .add-btn {
+    .price {
+      font-weight: bold;
+      margin: 10px 0;
+    }
+
+    .product button {
       width: 100%;
       padding: 8px;
-      font-size: 0.9rem;
-      border-radius: 4px;
+      margin: 5px 0;
       border: none;
+      border-radius: 4px;
       cursor: pointer;
-      margin-bottom: 0.5rem;
     }
 
-    .product .info-btn {
+    .info-btn {
       background: black;
       color: white;
     }
 
-    .product .add-btn {
+    .add-btn {
       background: #007bff;
       color: white;
     }
 
-    .product .info-box {
-      background: white;
-      border: 1px solid black;
-      padding: 0.75rem;
-      margin-top: 0.5rem;
+    .info-box {
       display: none;
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 8px;
+      margin-top: 5px;
       font-size: 0.9rem;
-      max-height: 150px;
-      overflow-y: auto;
-      width: 100%;
-      box-sizing: border-box;
-      white-space: normal; /* wrap text */
-      word-break: break-word; /* break long words */
     }
 
-    .product .price {
-      font-weight: bold;
-      margin-bottom: 0.5rem;
-      font-size: 1.1rem;
-      color: #222;
-    }
-
-    /* Cart Panel */
-    #cartPanel {
-      position: fixed;
-      top: 0;
-      right: -350px;
-      width: 350px;
-      height: 100vh;
-      background: white;
-      border-left: 3px solid black;
-      box-shadow: -3px 0 10px rgba(0,0,0,0.1);
-      transition: right 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      z-index: 1000;
-    }
-
-    #cartPanel.open {
-      right: 0;
-    }
-
-    .cart-header {
+    .bottom-bar {
       background: black;
       color: white;
-      padding: 1rem;
-      font-weight: bold;
-      font-size: 1.2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .close-cart-btn {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 1.5rem;
-      cursor: pointer;
-    }
-
-    #cartItems {
-      flex: 1;
-      overflow-y: auto;
-      padding: 1rem;
-    }
-
-    .cart-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.7rem;
-      border-bottom: 1px solid #ddd;
-      padding-bottom: 0.4rem;
-      word-break: break-word;
-    }
-
-    .cart-item-name {
-      flex: 1;
-      font-weight: 600;
-    }
-
-    .cart-item-qty {
-      margin: 0 0.5rem;
-      color: #555;
-    }
-
-    .cart-item-price {
-      width: 60px;
-      text-align: right;
-      font-weight: 600;
-    }
-
-    .cart-item-remove {
-      background: none;
-      border: none;
-      color: #b00;
-      font-weight: bold;
-      font-size: 1.2rem;
-      cursor: pointer;
-      margin-left: 0.5rem;
-    }
-
-    .cart-total,
-    #cartSaved {
-      padding: 1rem;
-      font-weight: bold;
-      border-top: 1px solid #ddd;
-      font-size: 1.1rem;
-    }
-
-    #cartSaved {
-      color: green;
-      display: none;
-    }
-
-    /* Discount code */
-    .discount-section {
-      display: flex;
-      padding: 0 1rem 1rem 1rem;
-      gap: 0.5rem;
-    }
-
-    .discount-input {
-      flex: 1;
-      padding: 0.5rem;
-      font-size: 1rem;
-      border: 1px solid #aaa;
-      border-radius: 4px;
-    }
-
-    .discount-btn {
-      background: #007bff;
-      color: white;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    /* Payment */
-    .btn-payment {
-      margin: 0 1rem 1rem 1rem;
-      background: #007bff;
-      color: white;
-      border: none;
-      padding: 0.75rem;
-      font-size: 1rem;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    /* Payment modal message after pay */
-    .payment-message {
-      background: white;
-      color: black;
-      padding: 1rem;
-      border: 1px solid black;
-      font-size: 1rem;
-      margin: 1rem;
-      white-space: normal;
       text-align: center;
-      border-radius: 4px;
+      padding: 1rem;
+      font-size: 0.85rem;
     }
 
-    /* Bottom bar Gmail contact */
-    .gmail-contact {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      cursor: pointer;
+    .contact-link {
       color: white;
-      font-weight: bold;
-      user-select: none;
+      text-decoration: underline;
+      cursor: pointer;
     }
 
-    .gmail-contact img {
-      width: 20px;
-      height: 20px;
+    .contact-popup {
+      display: none;
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      border: 1px solid #ccc;
+      padding: 1rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      z-index: 10;
+      text-align: center;
+      width: 300px;
     }
-
-    /* Spacer to keep page long */
-    .spacer {
-      height: 1500px;
-    }
-
   </style>
 </head>
 <body>
 
-  <div class="top-bar" role="banner">
-    <div class="socials" aria-label="Social media links">
-      <a href="#" target="_blank" rel="noopener" aria-label="Twitter">
-        <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="Twitter logo" />
-      </a>
-      <a href="https://www.tiktok.com/@trendtolife" target="_blank" rel="noopener" aria-label="TikTok">
-        <img src="https://cdn-icons-png.flaticon.com/512/3046/3046120.png" alt="TikTok logo" />
-      </a>
-      <a href="#" target="_blank" rel="noopener" aria-label="Instagram">
-        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram logo" />
-      </a>
-      <a href="#" target="_blank" rel="noopener" aria-label="YouTube">
-        <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="YouTube logo" />
-      </a>
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <div class="social-icons">
+      <a href="https://twitter.com/" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="Twitter"></a>
+      <a href="https://instagram.com/" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram"></a>
+      <a href="https://www.youtube.com/" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="YouTube"></a>
+      <a href="https://www.tiktok.com/@trendtolife" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png" alt="TikTok"></a>
     </div>
-    TrendToLife
-    <button id="cartButton" aria-label="Toggle shopping cart">Cart</button>
+    <div class="logo">TrendToLife</div>
+    <button class="cart-button">Cart</button>
   </div>
 
-  <div class="content" role="main">
+  <!-- PRODUCTS -->
+  <div class="products">
     <div class="product" data-id="1" data-name="Sleek Watch" data-price="59.99">
-      <img src="https://via.placeholder.com/180?text=Watch" alt="Sleek Watch" />
+      <img src="https://via.placeholder.com/180x180.png?text=Watch" alt="Sleek Watch">
       <div class="price">$59.99</div>
-      <button class="info-btn" aria-expanded="false">More Info</button>
-      <div class="info-box" aria-hidden="true">A modern watch with leather strap and waterproof design.</div>
+      <button class="info-btn">More Info</button>
+      <div class="info-box">A sleek modern watch with a leather strap and waterproof feature.</div>
       <button class="add-btn">Add to Cart</button>
     </div>
 
     <div class="product" data-id="2" data-name="Wireless Headphones" data-price="89.99">
-      <img src="https://via.placeholder.com/180?text=Headphones" alt="Wireless Headphones" />
+      <img src="https://via.placeholder.com/180x180.png?text=Headphones" alt="Wireless Headphones">
       <div class="price">$89.99</div>
-      <button class="info-btn" aria-expanded="false">More Info</button>
-      <div class="info-box" aria-hidden="true">High-quality wireless headphones with noise cancellation.</div>
+      <button class="info-btn">More Info</button>
+      <div class="info-box">Noise-cancelling wireless headphones with Bluetooth 5.0 support.</div>
       <button class="add-btn">Add to Cart</button>
     </div>
-
-    <div class="spacer"></div>
   </div>
 
-  <div id="cartPanel" aria-label="Shopping cart" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="cart-header">
-      Your Cart
-      <button class="close-cart-btn" aria-label="Close shopping cart">&lt;</button>
-    </div>
-
-    <div id="cartItems" role="list"></div>
-
-    <div id="cartSaved" aria-live="polite"></div>
-    <div class="cart-total">Total Cost: $0.00</div>
-
-    <div class="discount-section">
-      <input
-        type="text"
-        id="discountCode"
-        class="discount-input"
-        placeholder="Enter discount code"
-        aria-label="Discount code"
-      />
-      <button id="applyDiscount" class="discount-btn">Apply</button>
-    </div>
-
-    <button id="paymentButton" class="btn-payment">Pay</button>
-
-    <div id="paymentMessage" class="payment-message" style="display:none;">
-      Send me an email telling me what you want. I will then send you a link to my bank account so you can send me the money. Just provide what you bought and if you used a code.
-    </div>
+  <!-- CONTACT POPUP -->
+  <div class="contact-popup" id="contactPopup">
+    <p><strong>For questions or refunds</strong></p>
+    <p>Email: trendtolife.co@gmail.com</p>
   </div>
 
-  <div class="bottom-bar" role="contentinfo">
-    <div class="gmail-contact" id="gmailContact" tabindex="0" role="button" aria-pressed="false" aria-label="Contact via email">
-      <img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" alt="Gmail logo" />
-      Contact
-    </div>
-    <div style="font-size:0.9rem;">© 2025 TrendToLife</div>
+  <!-- BOTTOM BAR -->
+  <div class="bottom-bar">
+    <span class="contact-link" onclick="document.getElementById('contactPopup').style.display='block'">📧 Contact</span>
+    <div>© 2025 TrendToLife. All rights reserved.</div>
   </div>
 
   <script>
-    // Toggle product info
+    // Toggle info boxes
     document.querySelectorAll('.info-btn').forEach(button => {
       button.addEventListener('click', () => {
         const infoBox = button.nextElementSibling;
-        const expanded = button.getAttribute('aria-expanded') === 'true';
-        button.setAttribute('aria-expanded', !expanded);
-        if (expanded) {
-          infoBox.style.display = 'none';
-          infoBox.setAttribute('aria-hidden', 'true');
-        } else {
-          infoBox.style.display = 'block';
-          infoBox.setAttribute('aria-hidden', 'false');
-        }
+        infoBox.style.display = infoBox.style.display === 'block' ? 'none' : 'block';
       });
-    });
-
-    // Cart elements
-    const cartButton = document.getElementById('cartButton');
-    const cartPanel = document.getElementById('cartPanel');
-    const closeCartBtn = document.querySelector('.close-cart-btn');
-    const cartItemsEl = document.getElementById('cartItems');
-    const totalCostEl = cartPanel.querySelector('.cart-total');
-    const cartSavedEl = document.getElementById('cartSaved');
-    const discountInput = document.getElementById('discountCode');
-    const applyDiscountBtn = document.getElementById('applyDiscount');
-    const paymentBtn = document.getElementById('paymentButton');
-    const paymentMessage = document.getElementById('paymentMessage');
-
-    let cart = {};
-    let discountPercent = 0;
-    const discountCode = "RELEASE";
-
-    function updateCartDisplay() {
-      cartItemsEl.innerHTML = '';
-      let total = 0;
-      let saved = 0;
-
-      Object.values(cart).forEach(item => {
-        const itemTotal = item.price * item.quantity;
-        total += itemTotal;
-
-        const div = document.createElement('div');
-        div.className = 'cart-item';
-        div.setAttribute('role', 'listitem');
-
-        div.innerHTML = `
-          <div class="cart-item-name">${item.name}</div>
-          <div class="cart-item-qty">x${item.quantity}</div>
-          <div class="cart-item-price">$${itemTotal.toFixed(2)}</div>
-          <button class="cart-item-remove" aria-label="Remove ${item.name} from cart">&times;</button>
-        `;
-        const removeBtn = div.querySelector('.cart-item-remove');
-        removeBtn.addEventListener('click', () => {
-          if (item.quantity > 1) {
-            item.quantity--;
-          } else {
-            delete cart[item.id];
-          }
-          updateCartDisplay();
-        });
-
-        cartItemsEl.appendChild(div);
-      });
-
-      if (discountPercent > 0) {
-        saved = total * (discountPercent / 100);
-        total = total - saved;
-        cartSavedEl.textContent = `You saved: $${saved.toFixed(2)}`;
-        cartSavedEl.style.display = 'block';
-      } else {
-        cartSavedEl.style.display = 'none';
-      }
-
-      totalCostEl.textContent = `Total Cost: $${total.toFixed(2)}`;
-    }
-
-    // Add to cart buttons
-    document.querySelectorAll('.add-btn').forEach(button => {
-      button.addEventListener('click', (e) => {
-        const product = e.target.closest('.product');
-        const id = product.dataset.id;
-        const name = product.dataset.name;
-        const price = parseFloat(product.dataset.price);
-
-        if (cart[id]) {
-          cart[id].quantity++;
-        } else {
-          cart[id] = { id, name, price, quantity: 1 };
-        }
-        updateCartDisplay();
-        openCart();
-      });
-    });
-
-    function openCart() {
-      cartPanel.classList.add('open');
-      cartPanel.setAttribute('aria-hidden', 'false');
-    }
-    function closeCart() {
-      cartPanel.classList.remove('open');
-      cartPanel.setAttribute('aria-hidden', 'true');
-    }
-
-    cartButton.addEventListener('click', () => {
-      if (cartPanel.classList.contains('open')) {
-        closeCart();
-      } else {
-        openCart();
-      }
-    });
-
-    closeCartBtn.addEventListener('click', closeCart);
-
-    // Discount code
-    applyDiscountBtn.addEventListener('click', () => {
-      const code = discountInput.value.trim().toUpperCase();
-      if (code === discountCode) {
-        discountPercent = 25;
-        updateCartDisplay();
-        alert("Discount code applied: 25% off!");
-      } else {
-        discountPercent = 0;
-        updateCartDisplay();
-        alert("Invalid discount code.");
-      }
-    });
-
-    // Payment button
-    paymentBtn.addEventListener('click', () => {
-      paymentMessage.style.display = 'block';
-    });
-
-    // Gmail contact click shows message
-    const gmailContact = document.getElementById('gmailContact');
-    gmailContact.addEventListener('click', () => {
-      alert('For questions or refunds, email trendtolife.co@gmail.com');
     });
   </script>
 
