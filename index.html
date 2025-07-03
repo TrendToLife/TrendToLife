@@ -5,17 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>TrendToLife</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
   body {
-    background-color: white;
     font-family: Arial, sans-serif;
+    background: white;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
   }
   .top-bar,
   .bottom-bar {
-    background-color: black;
+    background: black;
     color: white;
     width: 100%;
     padding: 1rem;
@@ -26,7 +30,6 @@
     text-align: center;
     position: relative;
   }
-  /* Top right with socials and cart */
   .top-right {
     position: fixed;
     top: 12px;
@@ -35,9 +38,7 @@
     gap: 12px;
     align-items: center;
     z-index: 1200;
-    flex-wrap: nowrap;
   }
-  /* Social icons */
   .social-icon svg {
     width: 24px;
     height: 24px;
@@ -47,8 +48,6 @@
   .social-icon:hover svg {
     transform: scale(1.1);
   }
-
-  /* Cart button */
   .cart-button {
     background-color: #007bff;
     border: none;
@@ -65,15 +64,11 @@
   .cart-button:hover {
     background-color: #0056b3;
   }
-
-  /* Content and page length */
   .content {
     flex: 1;
     padding: 2rem;
-    margin-top: 3.5rem; /* leave space for fixed top-right */
     max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 3.5rem auto 2rem;
   }
   .spacer {
     margin-bottom: 2rem;
@@ -81,8 +76,6 @@
     line-height: 1.6;
     color: #333;
   }
-
-  /* Bottom bar */
   .bottom-bar {
     font-size: 0.75rem;
     display: flex;
@@ -90,12 +83,12 @@
     align-items: center;
   }
 
-  /* Cart slide panel */
+  /* Cart panel */
   #cartPanel {
     position: fixed;
     top: 0;
-    right: -320px; /* hidden by default */
-    width: 320px;
+    right: -360px;
+    width: 360px;
     height: 100vh;
     background: #f9f9f9;
     box-shadow: -3px 0 8px rgba(0,0,0,0.2);
@@ -129,6 +122,21 @@
     justify-content: space-between;
     align-items: center;
   }
+  .cart-item .item-info {
+    flex: 1;
+  }
+  .cart-item .item-name {
+    font-weight: 600;
+  }
+  .cart-item .item-qty {
+    margin-left: 10px;
+    font-size: 0.9rem;
+    color: #555;
+  }
+  .cart-item .item-price {
+    margin-left: 10px;
+    font-weight: 600;
+  }
   .cart-item button.delete-btn {
     background: transparent;
     border: none;
@@ -136,6 +144,31 @@
     font-weight: bold;
     font-size: 1.1rem;
     cursor: pointer;
+  }
+  #discountSection {
+    margin-bottom: 1rem;
+  }
+  #discountSection input {
+    width: 65%;
+    padding: 6px 8px;
+    font-size: 1rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    margin-right: 6px;
+  }
+  #discountSection button {
+    background-color: black;
+    border: none;
+    color: white;
+    padding: 7px 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    user-select: none;
+  }
+  #discountSection button:hover {
+    background-color: #333;
   }
   #continuePayment {
     background-color: #007bff;
@@ -147,12 +180,27 @@
     border-radius: 4px;
     cursor: pointer;
     user-select: none;
+    margin-bottom: 0.5rem;
+    width: 100%;
   }
   #continuePayment:hover {
     background-color: #0056b3;
   }
+  #totalCost {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: black;
+    margin-bottom: 0.25rem;
+  }
+  #youSaved {
+    font-weight: 600;
+    font-size: 1rem;
+    color: black;
+    display: none;
+    margin-bottom: 1rem;
+  }
 
-  /* Black buttons above each "Add to Cart" */
+  /* Product cards */
   .product {
     margin-bottom: 2rem;
   }
@@ -184,8 +232,6 @@
   .product button.add-cart-btn:hover {
     background-color: #0056b3;
   }
-
-  /* Info box for each product */
   .info-box {
     background: white;
     border: 1px solid #ccc;
@@ -195,19 +241,51 @@
     font-size: 0.9rem;
   }
 
-  /* Modal styles */
+  /* Contact at bottom */
+  #contactSection {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+  }
+  #contactSection svg {
+    width: 20px;
+    height: 20px;
+    fill: #D44638; /* Gmail Red */
+  }
+  #contactSection:hover {
+    text-decoration: underline;
+  }
+  #contactInfoBox {
+    display: none;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    position: fixed;
+    bottom: 40px;
+    right: 10px;
+    width: 300px;
+    font-size: 0.9rem;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    z-index: 1400;
+  }
+  #contactInfoBox.show {
+    display: block;
+  }
+
+  /* Modal for login */
   .modal {
-    display: none; /* Hidden by default */
+    display: none;
     position: fixed; 
-    z-index: 1500; /* Above cart & everything */
+    z-index: 1500; 
     left: 0;
     top: 0;
     width: 100%; 
     height: 100%; 
     overflow: auto; 
-    background-color: rgba(0,0,0,0.5); /* Black transparent bg */
+    background-color: rgba(0,0,0,0.5);
   }
-
   .modal-content {
     background-color: white;
     margin: 10% auto;
@@ -217,11 +295,9 @@
     max-width: 90%;
     text-align: center;
   }
-
   .modal-content h2 {
     margin-bottom: 1rem;
   }
-
   .modal-content input {
     width: 90%;
     padding: 8px 10px;
@@ -230,7 +306,6 @@
     border: 1px solid #ccc;
     border-radius: 4px;
   }
-
   .close {
     color: #aaa;
     float: right;
@@ -239,234 +314,256 @@
     cursor: pointer;
     margin-top: -10px;
   }
-
   .close:hover {
     color: black;
   }
-
 </style>
 </head>
 <body>
 
   <div class="top-bar">
     TrendToLife
-    <div class="top-right">
-      <a href="https://twitter.com/yourprofile" target="_blank" aria-label="Twitter" title="Twitter" class="social-icon" id="twitter">
-        <svg viewBox="0 0 24 24" fill="#1DA1F2" xmlns="http://www.w3.org/2000/svg"><path d="M23.954 4.569a10 10 0 0 1-2.825.775 4.958 4.958 0 0 0 2.163-2.723c-.95.555-2.005.959-3.127 1.184a4.92 4.92 0 0 0-8.384 4.482A13.978 13.978 0 0 1 1.671 3.149a4.917 4.917 0 0 0 1.523 6.573 4.903 4.903 0 0 1-2.228-.616c-.054 2.28 1.581 4.415 3.949 4.89a4.935 4.935 0 0 1-2.224.085 4.927 4.927 0 0 0 4.604 3.417A9.867 9.867 0 0 1 0 19.54a13.94 13.94 0 0 0 7.548 2.209c9.056 0 14.01-7.5 14.01-14.01 0-.213-.005-.425-.015-.636A10.012 10.012 0 0 0 24 4.59z"/></svg>
+    <div class="top-right" aria-label="Social media and cart buttons">
+      <!-- Social Icons -->
+      <a href="https://twitter.com/yourprofile" target="_blank" aria-label="Twitter" title="Twitter" class="social-icon" style="fill:#1DA1F2;">
+        <svg viewBox="0 0 24 24" fill="#1DA1F2" xmlns="http://www.w3.org/2000/svg"><path d="M23.954 4.569a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.95.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.38 4.482A13.978 13.978 0 011.671 3.149a4.822 4.822 0 001.523 6.573 4.902 4.902 0 01-2.228-.616c-.054 2.281 1.581 4.415 3.949 4.89a4.996 4.996 0 01-2.224.084 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.107c-.395 0-.787-.023-1.175-.067a13.945 13.945 0 007.557 2.212c9.054 0 14-7.496 14-13.986 0-.21 0-.423-.015-.633A9.936 9.936 0 0024 4.59z"/></svg>
       </a>
-
-      <a href="https://www.tiktok.com/@yourprofile" target="_blank" aria-label="TikTok" title="TikTok" class="social-icon" id="tiktok">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M9.5 3.25V15.75C9.5 17.8211 11.1789 19.5 13.25 19.5C15.3211 19.5 17 17.8211 17 15.75V7.25H15.25V15.75C15.25 16.7165 14.4665 17.5 13.5 17.5C12.5335 17.5 11.75 16.7165 11.75 15.75V5.75H9.5Z" fill="#69C9D0"/>
-          <path d="M15 6.25C16.5188 6.25 18 7.03438 19.125 8.325V7.25H20.75V11.5H19.125V9.875C18.166 8.75875 16.6838 8.25 15 8.25V6.25Z" fill="#000000"/>
+      <a href="https://www.tiktok.com/@yourprofile" target="_blank" aria-label="TikTok" title="TikTok" class="social-icon" style="fill:#69C9D0;">
+        <!-- Better TikTok SVG -->
+        <svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" fill="#69C9D0" >
+          <path d="M202.45 66.26c-12.32-1.18-24.29-5.57-34.41-13.27v94.56a46.9 46.9 0 01-43.91-1.38v30.52a78.28 78.28 0 0067.46 18.81v-80.41a38.09 38.09 0 0010.86 1.15z"/>
+          <path d="M130.13 224.21a78.54 78.54 0 01-46.5-15.45v-29.6a46.49 46.49 0 0046.5 44.11z" fill="#000"/>
+          <path d="M163.4 53.71a45.9 45.9 0 0046.52 44.42v-30.06a78.14 78.14 0 01-67.23-18.61v29.61a46.56 46.56 0 0010.7 1.58z" fill="#000"/>
         </svg>
       </a>
-
-      <a href="https://www.instagram.com/yourprofile" target="_blank" aria-label="Instagram" title="Instagram" class="social-icon" id="instagram">
-        <svg viewBox="0 0 24 24" fill="#E1306C" xmlns="http://www.w3.org/2000/svg">
-          <path d="M7 2C4.243 2 2 4.243 2 7v10c0 2.757 2.243 5 5 5h10c2.757 0 5-2.243 5-5V7c0-2.757-2.243-5-5-5H7zm8 2a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm-5 3a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
-        </svg>
+      <a href="https://www.instagram.com/yourprofile" target="_blank" aria-label="Instagram" title="Instagram" class="social-icon" style="fill:#E4405F;">
+        <svg viewBox="0 0 24 24" fill="#E4405F" xmlns="http://www.w3.org/2000/svg"><path d="M7.75 2h8.5C19.55 2 22 4.45 22 7.75v8.5c0 3.3-2.45 5.75-5.75 5.75h-8.5C4.45 22 2 19.55 2 16.25v-8.5C2 4.45 4.45 2 7.75 2zm4.25 3a4 4 0 100 8 4 4 0 000-8zm5.5 1a1 1 0 110 2 1 1 0 010-2z"/></svg>
       </a>
-
-      <a href="https://www.youtube.com/channel/yourchannel" target="_blank" aria-label="YouTube" title="YouTube" class="social-icon" id="youtube">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="24" height="24" rx="4" fill="#FF0000"/>
-          <path d="M10 15L15.19 12L10 9V15Z" fill="white"/>
-        </svg>
+      <a href="https://www.youtube.com/channel/yourprofile" target="_blank" aria-label="YouTube" title="YouTube" class="social-icon" style="fill:#FF0000;">
+        <svg viewBox="0 0 24 24" fill="#FF0000" xmlns="http://www.w3.org/2000/svg"><path d="M23.498 6.186a2.9 2.9 0 00-2.042-2.048C19.605 3.5 12 3.5 12 3.5s-7.605 0-9.456.638A2.9 2.9 0 00.502 6.186 30.161 30.161 0 000 12a30.161 30.161 0 00.502 5.814 2.9 2.9 0 002.042 2.048c1.851.638 9.456.638 9.456.638s7.605 0 9.456-.638a2.9 2.9 0 002.042-2.048A30.161 30.161 0 0024 12a30.161 30.161 0 00-.502-5.814zM9.75 15.5v-7l6 3.5-6 3.5z"/></svg>
       </a>
-
-      <button class="cart-button" id="cartToggle">Cart</button>
+      <button class="cart-button" id="openCartBtn" aria-label="Open cart">Cart</button>
     </div>
   </div>
 
-  <div class="content">
-    <!-- Example product list -->
-    <div class="product" data-name="Product 1" data-price="29.99" data-info="This is info about Product 1.">
-      <button class="info-btn">More Info</button>
-      <button class="add-cart-btn">Add to Cart - $29.99</button>
-      <div class="info-box"></div>
+  <div class="content" id="productList">
+
+    <div class="product" data-id="1" data-name="Minimalist Watch" data-price="89.99" data-info="A sleek minimalist watch with a leather band.">
+      <button class="info-btn">Info</button>
+      <button class="add-cart-btn">Add to Cart - $89.99</button>
+      <div class="info-box">A sleek minimalist watch with a leather band.</div>
     </div>
 
-    <div class="product" data-name="Product 2" data-price="49.99" data-info="This is info about Product 2.">
-      <button class="info-btn">More Info</button>
-      <button class="add-cart-btn">Add to Cart - $49.99</button>
-      <div class="info-box"></div>
+    <div class="product" data-id="2" data-name="Canvas Tote Bag" data-price="25.49" data-info="Eco-friendly canvas tote bag for daily use.">
+      <button class="info-btn">Info</button>
+      <button class="add-cart-btn">Add to Cart - $25.49</button>
+      <div class="info-box">Eco-friendly canvas tote bag for daily use.</div>
     </div>
 
-    <div class="product" data-name="Product 3" data-price="19.99" data-info="This is info about Product 3.">
-      <button class="info-btn">More Info</button>
-      <button class="add-cart-btn">Add to Cart - $19.99</button>
-      <div class="info-box"></div>
+    <div class="product" data-id="3" data-name="Wireless Earbuds" data-price="59.99" data-info="High-quality wireless earbuds with noise cancellation.">
+      <button class="info-btn">Info</button>
+      <button class="add-cart-btn">Add to Cart - $59.99</button>
+      <div class="info-box">High-quality wireless earbuds with noise cancellation.</div>
     </div>
 
-    <div class="spacer">
-      <p>Lots of content here to make the page longer. Scroll down to test the fixed cart and buttons.</p>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin in turpis at ligula suscipit feugiat. Nulla facilisi.</p>
-      <p>More content repeated many times...</p>
-      <p>More content repeated many times...</p>
-      <p>More content repeated many times...</p>
-      <p>More content repeated many times...</p>
-      <p>More content repeated many times...</p>
-      <p>More content repeated many times...</p>
-      <p>More content repeated many times...</p>
+    <div class="product" data-id="4" data-name="Ceramic Mug" data-price="12.99" data-info="A beautifully crafted ceramic coffee mug.">
+      <button class="info-btn">Info</button>
+      <button class="add-cart-btn">Add to Cart - $12.99</button>
+      <div class="info-box">A beautifully crafted ceramic coffee mug.</div>
     </div>
+
+    <div class="spacer">Welcome to TrendToLife. Scroll down to see more content.</div>
+    <div class="spacer">This is a placeholder for your product listings or sections.</div>
+    <div class="spacer">More placeholder content to lengthen the page.</div>
+    <div class="spacer">You can replace these with actual products or categories.</div>
+    <div class="spacer">TrendToLife is your home for modern, minimal trends.</div>
+    <div class="spacer">Keep scrolling...</div>
   </div>
 
   <div class="bottom-bar">
-    <div>
-      <svg xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;" width="20" height="20" fill="#D44638" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4S14.21 4 12 4 8 5.79 8 8s1.79 4 4 4z"/><path d="M19 22H5v-1.5c0-2.5 5-3.5 7-3.5s7 1 7 3.5V22z"/></svg>
-      <span style="margin-left: 8px; cursor:pointer;" id="contactEmailBtn">Contact</span>
+    <div id="contactSection" aria-label="Contact via email" tabindex="0">
+      <svg viewBox="0 0 24 24" fill="#D44638" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 12.713l11.985-7.713v14H0v-14l11.985 7.713zM12 2l-12 7.713v14h24v-14L12 2z"/></svg>
+      <span>Contact</span>
     </div>
-    <div>&copy; 2025 TrendToLife</div>
+    <div>© 2025 TrendToLife. All rights reserved.</div>
   </div>
 
-  <!-- Cart panel -->
-  <div id="cartPanel">
-    <div class="close-cart" id="closeCart">&lt;</div>
-    <h3>Your Cart</h3>
-    <div id="cartItems">
-      <p>Your cart is empty.</p>
+  <div id="contactInfoBox">
+    For questions or refunds, <br />trendtolife.co@gmail.com
+  </div>
+
+  <div id="cartPanel" aria-label="Shopping Cart" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="close-cart" id="closeCartBtn" aria-label="Close cart">&lt;</div>
+    <div id="cartItems" aria-live="polite" aria-relevant="additions removals"></div>
+    <div id="discountSection">
+      <input type="text" id="discountCodeInput" placeholder="Discount code" aria-label="Enter discount code" />
+      <button id="applyDiscountBtn">Apply</button>
     </div>
+    <div id="totalCost">Total Cost: $0.00</div>
+    <div id="youSaved">You saved: $0.00</div>
     <button id="continuePayment">Continue to Payment</button>
   </div>
 
-  <!-- Contact Info Modal -->
-  <div id="contactModal" class="modal">
+  <!-- Login modal -->
+  <div id="loginModal" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
     <div class="modal-content">
-      <span id="closeContact" class="close">&times;</span>
-      <p>For questions or refunds, trendtolife.co@gmail.com</p>
-    </div>
-  </div>
-
-  <!-- Login Modal -->
-  <div id="loginModal" class="modal">
-    <div class="modal-content">
-      <span id="closeLogin" class="close">&times;</span>
-      <h2>Login to Continue</h2>
-      <form id="loginForm">
-        <input type="email" id="loginEmail" placeholder="Email" required />
-        <input type="password" id="loginPassword" placeholder="Password" required />
-        <button type="submit" class="cart-button">Login</button>
-      </form>
+      <span class="close" id="closeLoginModal" aria-label="Close login">&times;</span>
+      <h2 id="loginTitle">Login to Continue</h2>
+      <input type="email" placeholder="Email" aria-label="Email" />
+      <input type="password" placeholder="Password" aria-label="Password" />
+      <button style="margin-top:10px; padding: 8px 12px; background:#007bff; color:white; border:none; border-radius:4px; cursor:pointer;">Login</button>
     </div>
   </div>
 
 <script>
-  // Toggle cart panel open/close
-  const cartToggleBtn = document.getElementById('cartToggle');
-  const cartPanel = document.getElementById('cartPanel');
-  const closeCartBtn = document.getElementById('closeCart');
-  const cartItemsDiv = document.getElementById('cartItems');
-
-  cartToggleBtn.addEventListener('click', () => {
-    cartPanel.classList.add('open');
-  });
-
-  closeCartBtn.addEventListener('click', () => {
-    cartPanel.classList.remove('open');
-  });
-
-  // Products info toggling and add to cart
-  const products = document.querySelectorAll('.product');
-
-  products.forEach(product => {
-    const infoBtn = product.querySelector('.info-btn');
-    const addCartBtn = product.querySelector('.add-cart-btn');
-    const infoBox = product.querySelector('.info-box');
-
-    infoBtn.addEventListener('click', () => {
-      if (infoBox.style.display === 'block') {
-        infoBox.style.display = 'none';
-      } else {
-        infoBox.textContent = product.getAttribute('data-info');
-        infoBox.style.display = 'block';
-      }
-    });
-
-    addCartBtn.addEventListener('click', () => {
-      addToCart(product.getAttribute('data-name'), parseFloat(product.getAttribute('data-price')));
+  // Info button toggle
+  document.querySelectorAll('.info-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const infoBox = btn.nextElementSibling.nextElementSibling;
+      if (!infoBox) return;
+      infoBox.style.display = infoBox.style.display === 'block' ? 'none' : 'block';
     });
   });
 
-  // Cart data & functions
-  let cart = [];
+  // Cart Data & Functions
+  const cart = {};
+  let discount = 0;
 
-  function renderCart() {
+  function updateCartUI() {
+    const cartItemsDiv = document.getElementById('cartItems');
     cartItemsDiv.innerHTML = '';
-    if(cart.length === 0){
-      cartItemsDiv.innerHTML = '<p>Your cart is empty.</p>';
-      return;
-    }
-    cart.forEach((item, index) => {
-      const div = document.createElement('div');
-      div.classList.add('cart-item');
-      div.innerHTML = `
-        <span>${item.name} - $${item.price.toFixed(2)}</span>
-        <button class="delete-btn" data-index="${index}" aria-label="Remove ${item.name}">&times;</button>
+
+    let total = 0;
+    for (const id in cart) {
+      const item = cart[id];
+      const price = item.price;
+      const qty = item.quantity;
+      const subtotal = price * qty;
+      total += subtotal;
+
+      const cartItem = document.createElement('div');
+      cartItem.className = 'cart-item';
+      cartItem.innerHTML = `
+        <div class="item-info">
+          <span class="item-name">${item.name}</span>
+          <span class="item-qty">x${qty}</span>
+          <span class="item-price">$${subtotal.toFixed(2)}</span>
+        </div>
+        <button class="delete-btn" aria-label="Delete ${item.name} from cart">&times;</button>
       `;
-      cartItemsDiv.appendChild(div);
-    });
+      cartItemsDiv.appendChild(cartItem);
 
-    // Attach delete button events
-    document.querySelectorAll('.delete-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const idx = parseInt(e.target.getAttribute('data-index'));
-        cart.splice(idx,1);
-        renderCart();
+      cartItem.querySelector('.delete-btn').addEventListener('click', () => {
+        delete cart[id];
+        updateCartUI();
       });
+    }
+
+    // Calculate discounted total
+    let totalToShow = total;
+    let youSavedDiv = document.getElementById('youSaved');
+    if (discount > 0) {
+      const saved = total * discount;
+      totalToShow = total * (1 - discount);
+      youSavedDiv.style.display = 'block';
+      youSavedDiv.textContent = `You saved: $${saved.toFixed(2)}`;
+    } else {
+      youSavedDiv.style.display = 'none';
+    }
+
+    document.getElementById('totalCost').textContent = `Total Cost: $${totalToShow.toFixed(2)}`;
+
+    // Hide cart if empty
+    if (Object.keys(cart).length === 0) {
+      cartItemsDiv.innerHTML = '<em>Your cart is empty.</em>';
+      document.getElementById('totalCost').textContent = 'Total Cost: $0.00';
+      youSavedDiv.style.display = 'none';
+    }
+  }
+
+  // Add to cart stacking
+  document.querySelectorAll('.add-cart-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const product = btn.closest('.product');
+      const id = product.dataset.id;
+      const name = product.dataset.name;
+      const price = parseFloat(product.dataset.price);
+
+      if (cart[id]) {
+        cart[id].quantity++;
+      } else {
+        cart[id] = { name, price, quantity: 1 };
+      }
+      updateCartUI();
     });
-  }
+  });
 
-  function addToCart(name, price) {
-    cart.push({name, price});
-    renderCart();
+  // Discount code logic (sample codes)
+  const validCodes = {
+    "TREND10": 0.10,
+    "SAVE5": 0.05
+  };
+
+  document.getElementById('applyDiscountBtn').addEventListener('click', () => {
+    const code = document.getElementById('discountCodeInput').value.trim().toUpperCase();
+    if (validCodes[code]) {
+      discount = validCodes[code];
+      alert(`Discount code applied! You save ${discount * 100}%`);
+    } else {
+      discount = 0;
+      alert('Invalid discount code.');
+    }
+    updateCartUI();
+  });
+
+  // Cart open/close
+  const cartPanel = document.getElementById('cartPanel');
+  document.getElementById('openCartBtn').addEventListener('click', () => {
     cartPanel.classList.add('open');
-  }
-
-  renderCart();
-
-  // Contact modal open/close
-  const contactBtn = document.getElementById('contactEmailBtn');
-  const contactModal = document.getElementById('contactModal');
-  const closeContact = document.getElementById('closeContact');
-
-  contactBtn.addEventListener('click', () => {
-    contactModal.style.display = 'block';
+    cartPanel.setAttribute('aria-hidden', 'false');
+    updateCartUI();
+  });
+  document.getElementById('closeCartBtn').addEventListener('click', () => {
+    cartPanel.classList.remove('open');
+    cartPanel.setAttribute('aria-hidden', 'true');
   });
 
-  closeContact.addEventListener('click', () => {
-    contactModal.style.display = 'none';
+  // Contact toggle
+  const contactSection = document.getElementById('contactSection');
+  const contactInfoBox = document.getElementById('contactInfoBox');
+  contactSection.addEventListener('click', () => {
+    contactInfoBox.classList.toggle('show');
+  });
+  contactSection.addEventListener('keypress', (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      contactInfoBox.classList.toggle('show');
+      e.preventDefault();
+    }
   });
 
-  window.addEventListener('click', (e) => {
-    if(e.target === contactModal) contactModal.style.display = 'none';
-    if(e.target === loginModal) loginModal.style.display = 'none';
-  });
-
-  // Login modal open on "Continue to Payment"
+  // Continue to Payment triggers login modal
   const continuePaymentBtn = document.getElementById('continuePayment');
   const loginModal = document.getElementById('loginModal');
-  const closeLogin = document.getElementById('closeLogin');
-  const loginForm = document.getElementById('loginForm');
+  const closeLoginModalBtn = document.getElementById('closeLoginModal');
 
-  continuePaymentBtn.addEventListener('click', (e) => {
-    e.preventDefault();
+  continuePaymentBtn.addEventListener('click', () => {
     loginModal.style.display = 'block';
+    loginModal.setAttribute('aria-hidden', 'false');
   });
 
-  closeLogin.addEventListener('click', () => {
+  closeLoginModalBtn.addEventListener('click', () => {
     loginModal.style.display = 'none';
+    loginModal.setAttribute('aria-hidden', 'true');
   });
 
-  loginForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = document.getElementById('loginEmail').value;
-    // For demo just alert success & close modal
-    alert(`Logged in as ${email}. Proceeding to payment...`);
-    loginModal.style.display = 'none';
-
-    // TODO: Here you can redirect to payment or show payment UI
+  // Close login modal when clicking outside modal content
+  window.addEventListener('click', (e) => {
+    if (e.target === loginModal) {
+      loginModal.style.display = 'none';
+      loginModal.setAttribute('aria-hidden', 'true');
+    }
   });
 </script>
+
 </body>
 </html>
