@@ -316,7 +316,7 @@
       <a href="#" target="_blank" rel="noopener" aria-label="Twitter">
         <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="Twitter logo" />
       </a>
-      <a href="#" target="_blank" rel="noopener" aria-label="TikTok">
+      <a href="https://www.tiktok.com/@trendtolife" target="_blank" rel="noopener" aria-label="TikTok">
         <img src="https://cdn-icons-png.flaticon.com/512/3046/3046120.png" alt="TikTok logo" />
       </a>
       <a href="#" target="_blank" rel="noopener" aria-label="Instagram">
@@ -334,241 +334,199 @@
     <!-- Example products -->
     <div class="product" data-id="1" data-name="Sleek Watch" data-price="59.99">
       <img src="https://via.placeholder.com/180?text=Sleek+Watch" alt="Sleek Watch" />
-      <button class="info-btn" aria-expanded="false" aria-controls="info-1">Info</button>
-      <button class="add-btn">Add to Cart</button>
       <div class="price">$59.99</div>
-      <div class="info-box" id="info-1">A modern sleek watch with minimal design and high precision quartz movement.</div>
+      <button class="info-btn" aria-expanded="false">More Info</button>
+      <div class="info-box" aria-hidden="true">A modern watch with leather strap and waterproof design.</div>
+      <button class="add-btn">Add to Cart</button>
     </div>
 
-    <div class="product" data-id="2" data-name="Minimalist Backpack" data-price="79.99">
-      <img src="https://via.placeholder.com/180?text=Minimalist+Backpack" alt="Minimalist Backpack" />
-      <button class="info-btn" aria-expanded="false" aria-controls="info-2">Info</button>
-      <button class="add-btn">Add to Cart</button>
-      <div class="price">$79.99</div>
-      <div class="info-box" id="info-2">Lightweight backpack with multiple compartments, perfect for everyday use.</div>
-    </div>
-
-    <div class="product" data-id="3" data-name="Stylish Sneakers" data-price="89.99">
-      <img src="https://via.placeholder.com/180?text=Stylish+Sneakers" alt="Stylish Sneakers" />
-      <button class="info-btn" aria-expanded="false" aria-controls="info-3">Info</button>
-      <button class="add-btn">Add to Cart</button>
+    <div class="product" data-id="2" data-name="Wireless Headphones" data-price="89.99">
+      <img src="https://via.placeholder.com/180?text=Headphones" alt="Wireless Headphones" />
       <div class="price">$89.99</div>
-      <div class="info-box" id="info-3">Comfortable and stylish sneakers for all-day wear and casual outings.</div>
+      <button class="info-btn" aria-expanded="false">More Info</button>
+      <div class="info-box" aria-hidden="true">High-quality wireless headphones with noise cancellation.</div>
+      <button class="add-btn">Add to Cart</button>
     </div>
 
-    <!-- Blank space for length -->
     <div class="spacer"></div>
   </div>
 
-  <div id="cartPanel" role="region" aria-label="Shopping Cart">
+  <div id="cartPanel" aria-label="Shopping cart" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="cart-header">
-      Shopping Cart
-      <button class="close-cart-btn" aria-label="Close cart">&lt;</button>
+      Your Cart
+      <button class="close-cart-btn" aria-label="Close shopping cart">&lt;</button>
     </div>
-    <div id="cartItems" aria-live="polite" aria-relevant="additions removals"></div>
+
+    <div id="cartItems" role="list"></div>
+
+    <div id="cartSaved" aria-live="polite"></div>
+    <div class="cart-total">Total Cost: $0.00</div>
 
     <div class="discount-section">
-      <input type="text" id="discountCode" placeholder="Discount code" class="discount-input" aria-label="Discount code" />
+      <input
+        type="text"
+        id="discountCode"
+        class="discount-input"
+        placeholder="Enter discount code"
+        aria-label="Discount code"
+      />
       <button id="applyDiscount" class="discount-btn">Apply</button>
     </div>
 
-    <div id="cartSaved">You saved: $0.00</div>
-    <div class="cart-total">Total Cost: $0.00</div>
+    <button id="paymentButton" class="btn-payment">Pay</button>
 
-    <button id="payButton" class="btn-payment">Pay</button>
-
-    <!-- Payment message area -->
-    <div id="paymentMessage" style="display:none;"></div>
+    <div id="paymentMessage" class="payment-message" style="display:none;">
+      Send me an email telling me what you want. I will then send you a link to my bank account so you can send me the money. Just provide what you bought and if you used a code.
+    </div>
   </div>
 
   <div class="bottom-bar">
-    <div class="gmail-contact" role="button" tabindex="0" aria-label="Contact via email" id="gmailContact">
-      <img src="https://cdn-icons-png.flaticon.com/512/281/281769.png" alt="Gmail icon" />
+    <div class="gmail-contact" id="gmailContact" tabindex="0" role="button" aria-pressed="false" aria-label="Contact via email">
+      <img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" alt="Gmail logo" />
       Contact
     </div>
-    <div>© 2025 TrendToLife. All rights reserved.</div>
   </div>
 
   <script>
-    // Toggle product info box
-    document.querySelectorAll(".info-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const infoBox = btn.nextElementSibling.nextElementSibling; // info-box div
-        const expanded = btn.getAttribute("aria-expanded") === "true";
+    // Toggle product info
+    document.querySelectorAll('.info-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        const infoBox = button.nextElementSibling;
+        const expanded = button.getAttribute('aria-expanded') === 'true';
+        button.setAttribute('aria-expanded', !expanded);
         if (expanded) {
-          infoBox.style.display = "none";
-          btn.setAttribute("aria-expanded", "false");
+          infoBox.style.display = 'none';
+          infoBox.setAttribute('aria-hidden', 'true');
         } else {
-          infoBox.style.display = "block";
-          btn.setAttribute("aria-expanded", "true");
+          infoBox.style.display = 'block';
+          infoBox.setAttribute('aria-hidden', 'false');
         }
       });
     });
 
-    const cartButton = document.getElementById("cartButton");
-    const cartPanel = document.getElementById("cartPanel");
-    const closeCartBtn = cartPanel.querySelector(".close-cart-btn");
-    const cartItemsContainer = document.getElementById("cartItems");
-    const payButton = document.getElementById("payButton");
-    const paymentMessage = document.getElementById("paymentMessage");
-    const discountInput = document.getElementById("discountCode");
-    const applyDiscountBtn = document.getElementById("applyDiscount");
-    const cartSaved = document.getElementById("cartSaved");
-    const cartTotal = cartPanel.querySelector(".cart-total");
+    // Cart elements
+    const cartButton = document.getElementById('cartButton');
+    const cartPanel = document.getElementById('cartPanel');
+    const closeCartBtn = document.querySelector('.close-cart-btn');
+    const cartItemsEl = document.getElementById('cartItems');
+    const totalCostEl = cartPanel.querySelector('.cart-total');
+    const cartSavedEl = document.getElementById('cartSaved');
+    const discountInput = document.getElementById('discountCode');
+    const applyDiscountBtn = document.getElementById('applyDiscount');
+    const paymentBtn = document.getElementById('paymentButton');
+    const paymentMessage = document.getElementById('paymentMessage');
 
     let cart = {};
     let discountPercent = 0;
+    const discountCode = "RELEASE";
 
-    // Function to open cart panel
-    function openCart() {
-      cartPanel.classList.add("open");
-      paymentMessage.style.display = "none"; // Hide payment message if open
-      payButton.style.display = "inline-block";
-      // Show discount section again
-      discountInput.style.display = "inline-block";
-      applyDiscountBtn.style.display = "inline-block";
-      updateCartDisplay();
-    }
-
-    // Function to close cart panel
-    function closeCart() {
-      cartPanel.classList.remove("open");
-    }
-
-    // Update cart display
     function updateCartDisplay() {
-      cartItemsContainer.innerHTML = "";
+      cartItemsEl.innerHTML = '';
       let total = 0;
-      let totalBeforeDiscount = 0;
+      let saved = 0;
+
       Object.values(cart).forEach(item => {
-        totalBeforeDiscount += item.price * item.qty;
-        const itemDiv = document.createElement("div");
-        itemDiv.className = "cart-item";
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
 
-        const nameSpan = document.createElement("span");
-        nameSpan.className = "cart-item-name";
-        nameSpan.textContent = item.name;
+        const div = document.createElement('div');
+        div.className = 'cart-item';
+        div.setAttribute('role', 'listitem');
 
-        const qtySpan = document.createElement("span");
-        qtySpan.className = "cart-item-qty";
-        qtySpan.textContent = `x${item.qty}`;
-
-        const priceSpan = document.createElement("span");
-        priceSpan.className = "cart-item-price";
-        priceSpan.textContent = `$${(item.price * item.qty).toFixed(2)}`;
-
-        const removeBtn = document.createElement("button");
-        removeBtn.className = "cart-item-remove";
-        removeBtn.setAttribute("aria-label", `Remove ${item.name} from cart`);
-        removeBtn.textContent = "🗑";
-        removeBtn.addEventListener("click", () => {
-          removeFromCart(item.id);
+        div.innerHTML = `
+          <div class="cart-item-name">${item.name}</div>
+          <div class="cart-item-qty">x${item.quantity}</div>
+          <div class="cart-item-price">$${itemTotal.toFixed(2)}</div>
+          <button class="cart-item-remove" aria-label="Remove ${item.name} from cart">&times;</button>
+        `;
+        const removeBtn = div.querySelector('.cart-item-remove');
+        removeBtn.addEventListener('click', () => {
+          if (item.quantity > 1) {
+            item.quantity--;
+          } else {
+            delete cart[item.id];
+          }
+          updateCartDisplay();
         });
 
-        itemDiv.appendChild(nameSpan);
-        itemDiv.appendChild(qtySpan);
-        itemDiv.appendChild(priceSpan);
-        itemDiv.appendChild(removeBtn);
-
-        cartItemsContainer.appendChild(itemDiv);
+        cartItemsEl.appendChild(div);
       });
 
-      // Calculate total after discount
-      total = totalBeforeDiscount * (1 - discountPercent);
-
-      // Show "You saved" only if discount applied
       if (discountPercent > 0) {
-        const saved = totalBeforeDiscount - total;
-        cartSaved.textContent = `You saved: $${saved.toFixed(2)}`;
-        cartSaved.style.display = "block";
+        saved = total * (discountPercent / 100);
+        total = total - saved;
+        cartSavedEl.textContent = `You saved: $${saved.toFixed(2)}`;
+        cartSavedEl.style.display = 'block';
       } else {
-        cartSaved.style.display = "none";
+        cartSavedEl.style.display = 'none';
       }
 
-      cartTotal.textContent = `Total Cost: $${total.toFixed(2)}`;
+      totalCostEl.textContent = `Total Cost: $${total.toFixed(2)}`;
     }
 
-    // Add product to cart
-    function addToCart(product) {
-      if (cart[product.id]) {
-        cart[product.id].qty++;
+    // Add to cart buttons
+    document.querySelectorAll('.add-btn').forEach(button => {
+      button.addEventListener('click', (e) => {
+        const product = e.target.closest('.product');
+        const id = product.dataset.id;
+        const name = product.dataset.name;
+        const price = parseFloat(product.dataset.price);
+
+        if (cart[id]) {
+          cart[id].quantity++;
+        } else {
+          cart[id] = { id, name, price, quantity: 1 };
+        }
+        updateCartDisplay();
+        openCart();
+      });
+    });
+
+    function openCart() {
+      cartPanel.classList.add('open');
+      cartPanel.setAttribute('aria-hidden', 'false');
+    }
+    function closeCart() {
+      cartPanel.classList.remove('open');
+      cartPanel.setAttribute('aria-hidden', 'true');
+    }
+
+    cartButton.addEventListener('click', () => {
+      if (cartPanel.classList.contains('open')) {
+        closeCart();
       } else {
-        cart[product.id] = { ...product, qty: 1 };
+        openCart();
       }
-      openCart();
-    }
+    });
 
-    // Remove product from cart
-    function removeFromCart(id) {
-      delete cart[id];
-      updateCartDisplay();
-    }
+    closeCartBtn.addEventListener('click', closeCart);
 
-    // Discount code apply
-    applyDiscountBtn.addEventListener("click", () => {
+    // Discount code
+    applyDiscountBtn.addEventListener('click', () => {
       const code = discountInput.value.trim().toUpperCase();
-      if (code === "RELEASE") {
-        discountPercent = 0.25;
+      if (code === discountCode) {
+        discountPercent = 25;
+        updateCartDisplay();
         alert("Discount code applied: 25% off!");
       } else {
         discountPercent = 0;
+        updateCartDisplay();
         alert("Invalid discount code.");
       }
-      updateCartDisplay();
     });
 
-    // Pay button click - replace payment form with your message
-    payButton.addEventListener("click", () => {
-      // Clear cartItems container and discount/input/buttons
-      cartItemsContainer.innerHTML = "";
-      discountInput.style.display = "none";
-      applyDiscountBtn.style.display = "none";
-      payButton.style.display = "none";
-
-      paymentMessage.style.display = "block";
-      paymentMessage.className = "payment-message";
-      paymentMessage.textContent = "Send me an email telling me what you want. I will then send you a link to my bank account so you can send me the money. Just provide what you bought and if you used a code.";
-
-      // Clear cart and reset discount
-      cart = {};
-      discountPercent = 0;
-      updateCartDisplay();
+    // Payment button
+    paymentBtn.addEventListener('click', () => {
+      paymentMessage.style.display = 'block';
+      // Clear cart and inputs optionally if you want here
     });
 
-    // Cart open/close button events
-    cartButton.addEventListener("click", () => {
-      openCart();
-    });
-
-    closeCartBtn.addEventListener("click", () => {
-      closeCart();
-    });
-
-    // Add to cart buttons
-    document.querySelectorAll(".add-btn").forEach(btn => {
-      btn.addEventListener("click", e => {
-        const productDiv = e.target.closest(".product");
-        const product = {
-          id: productDiv.getAttribute("data-id"),
-          name: productDiv.getAttribute("data-name"),
-          price: parseFloat(productDiv.getAttribute("data-price"))
-        };
-        addToCart(product);
-        updateCartDisplay();
-      });
-    });
-
-    // Gmail contact alert on bottom bar
-    document.getElementById("gmailContact").addEventListener("click", () => {
-      alert("For questions or refunds, email: trendtolife.co@gmail.com");
-    });
-    // Also make it keyboard accessible
-    document.getElementById("gmailContact").addEventListener("keydown", e => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        alert("For questions or refunds, email: trendtolife.co@gmail.com");
-      }
+    // Gmail contact click shows message
+    const gmailContact = document.getElementById('gmailContact');
+    gmailContact.addEventListener('click', () => {
+      alert('For questions or refunds, email trendtolife.co@gmail.com');
     });
   </script>
+
 </body>
 </html>
