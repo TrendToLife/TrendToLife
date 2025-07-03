@@ -5,638 +5,679 @@
   <title>TrendToLife</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    /* Reset */
     * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+      margin: 0; padding: 0; box-sizing: border-box;
     }
-
     body {
-      background: white;
       font-family: Arial, sans-serif;
+      background: white;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      position: relative;
     }
-
-    /* Top bar */
     .top-bar {
       background: black;
       color: white;
+      padding: 1rem;
       font-weight: bold;
       font-size: 2rem;
       text-align: center;
-      padding: 1rem;
       position: relative;
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
     }
-
-    /* Social icons top right */
-    .social-icons {
+    .top-bar .right-controls {
       position: absolute;
       right: 1rem;
-      display: flex;
-      gap: 0.5rem;
       top: 50%;
       transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
     }
-    .social-icons a {
-      display: inline-block;
-      width: 24px;
-      height: 24px;
-    }
-    .social-icons svg {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-
-    /* Content */
-    .content {
-      flex: 1;
-      padding: 2rem;
-      max-width: 900px;
-      margin: 0 auto;
-    }
-    .product {
-      border: 1px solid #ddd;
-      padding: 1rem;
-      margin-bottom: 2rem;
-      border-radius: 6px;
-      max-width: 400px;
-    }
-    .product img {
-      width: 100%;
-      height: auto;
-      border-radius: 6px;
-      margin-bottom: 0.5rem;
-    }
-    .product-name {
-      font-weight: bold;
-      font-size: 1.2rem;
-      margin-bottom: 0.5rem;
-    }
-    .product-price {
-      color: #007bff;
-      font-weight: bold;
-      margin-bottom: 0.5rem;
-    }
-    .info-button {
-      background: black;
-      color: white;
+    .cart-button {
+      background-color: #007bff;
       border: none;
-      padding: 0.5rem;
-      width: 100%;
-      cursor: pointer;
-      margin-bottom: 0.5rem;
-      border-radius: 4px;
-      font-size: 0.9rem;
-    }
-    .info-text {
-      background: white;
-      border: 1px solid #ddd;
-      padding: 0.75rem;
-      border-radius: 4px;
-      margin-bottom: 1rem;
-      display: none;
-      font-size: 0.9rem;
-      color: #333;
-    }
-    .add-to-cart {
-      background: #007bff;
       color: white;
-      border: none;
-      padding: 0.75rem;
-      width: 100%;
+      padding: 8px 14px;
       border-radius: 4px;
+      font-weight: bold;
       cursor: pointer;
       font-size: 1rem;
     }
-    .add-to-cart:hover {
-      background: #0056b3;
+    .social-icons a {
+      text-decoration: none;
+      font-size: 1.3rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px; height: 30px;
+      border-radius: 4px;
+      color: white;
+      transition: opacity 0.3s;
+    }
+    .social-icons a:hover {
+      opacity: 0.8;
+    }
+    /* Social icon colors */
+    .social-twitter { background: #1DA1F2; }
+    .social-instagram { background: #E4405F; }
+    .social-tiktok { background: #000000; color: white; }
+    .social-youtube { background: #FF0000; }
+    
+    .content {
+      flex: 1;
+      padding: 2rem;
+    }
+    .spacer {
+      margin-bottom: 2rem;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: #333;
     }
 
     /* Cart slide panel */
     .cart-panel {
       position: fixed;
-      top: 0;
-      right: 0;
-      width: 320px;
+      top: 0; right: 0;
       height: 100vh;
+      width: 320px;
       background: #f9f9f9;
-      box-shadow: -3px 0 8px rgba(0,0,0,0.2);
+      box-shadow: -3px 0 7px rgba(0,0,0,0.2);
       transform: translateX(100%);
-      transition: transform 0.3s ease;
+      transition: transform 0.3s ease-in-out;
       display: flex;
       flex-direction: column;
       z-index: 1000;
-      padding: 1rem;
     }
     .cart-panel.open {
       transform: translateX(0);
     }
     .cart-header {
-      font-weight: bold;
-      font-size: 1.25rem;
-      margin-bottom: 1rem;
+      background: black;
+      color: white;
+      padding: 1rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      font-weight: bold;
+      font-size: 1.2rem;
     }
-    .close-cart {
-      background: none;
+    .close-cart-btn {
+      background: transparent;
       border: none;
+      color: white;
       font-size: 1.5rem;
       cursor: pointer;
-      font-weight: bold;
-      color: #333;
     }
     .cart-items {
       flex: 1;
       overflow-y: auto;
-      margin-bottom: 1rem;
+      padding: 1rem;
     }
     .cart-item {
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 0.6rem;
+      margin-bottom: 0.6rem;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid #ddd;
-      padding: 0.5rem 0;
-      font-size: 0.95rem;
+      flex-direction: column;
+      gap: 0.3rem;
     }
     .cart-item-name {
-      flex: 1;
+      font-weight: 600;
+      font-size: 1rem;
     }
-    .cart-item-qty {
-      margin: 0 0.5rem;
+    .cart-item-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .cart-item-controls button {
+      padding: 4px 8px;
+      border: 1px solid #007bff;
+      background: white;
+      color: #007bff;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      user-select: none;
     }
     .cart-item-price {
       font-weight: bold;
-      color: #007bff;
-      min-width: 60px;
       text-align: right;
+      margin-top: 0.2rem;
     }
     .trash-btn {
-      background: none;
+      background: transparent;
       border: none;
       color: red;
-      font-size: 1rem;
-      cursor: pointer;
-      margin-left: 0.5rem;
       font-weight: bold;
+      font-size: 1.2rem;
+      cursor: pointer;
+      margin-left: auto;
     }
 
-    .discount-code-section {
-      margin-bottom: 1rem;
+    .discount-section {
+      padding: 0 1rem 1rem 1rem;
+      border-top: 1px solid #ccc;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
     }
-    .discount-code-section input {
-      width: 60%;
-      padding: 0.4rem 0.5rem;
+    .discount-section input {
+      flex: 1;
+      padding: 6px;
+      font-size: 1rem;
       border: 1px solid #ccc;
       border-radius: 4px;
-      margin-right: 0.5rem;
     }
-    .discount-code-section button {
+    .discount-section button {
       background: #007bff;
-      color: white;
       border: none;
-      padding: 0.5rem 1rem;
+      color: white;
+      padding: 7px 12px;
       border-radius: 4px;
       cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
     }
-    .discount-code-section button:hover {
+    .discount-section button:hover {
       background: #0056b3;
     }
 
     .total-cost, .you-saved {
+      padding: 0 1rem;
       font-weight: bold;
-      font-size: 1rem;
-      margin-bottom: 0.25rem;
-      color: #222;
+      margin-top: 0.5rem;
+      font-size: 1.1rem;
     }
     .you-saved {
       color: green;
+      margin-bottom: 0.7rem;
+      display: none;
     }
 
     .continue-payment {
       background: #007bff;
       color: white;
       border: none;
-      padding: 0.75rem;
+      padding: 0.8rem;
+      margin: 0 1rem 1rem 1rem;
       border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: background-color 0.3s;
+      opacity: 1;
+    }
+    .continue-payment:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Payment modal */
+    #paymentModal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1500;
+    }
+    #paymentModal[aria-hidden="false"] {
+      display: flex;
+    }
+    .payment-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    .payment-content h2 {
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    .payment-content label {
+      display: block;
+      margin: 0.5rem 0 0.2rem 0;
+      font-weight: 600;
+    }
+    .payment-content input {
+      width: 100%;
+      padding: 8px;
+      font-size: 1rem;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    .payment-buttons {
+      margin-top: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .payment-buttons button {
+      flex: 1;
+      padding: 0.8rem;
+      font-weight: bold;
+      border-radius: 4px;
+      border: none;
       cursor: pointer;
       font-size: 1rem;
-      width: 100%;
     }
-    .continue-payment:hover {
-      background: #0056b3;
+    .pay-now-btn {
+      background: #28a745;
+      color: white;
+      transition: background-color 0.3s;
+    }
+    .pay-now-btn:hover {
+      background: #218838;
+    }
+    .close-payment-btn {
+      background: #dc3545;
+      color: white;
+      transition: background-color 0.3s;
+    }
+    .close-payment-btn:hover {
+      background: #c82333;
     }
 
     /* Bottom bar */
     .bottom-bar {
       background: black;
       color: white;
-      font-size: 0.75rem;
-      padding: 0.5rem 1rem;
+      padding: 0.8rem 1rem;
+      font-size: 0.8rem;
       display: flex;
-      justify-content: flex-start;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 10;
+    }
+    .bottom-bar .contact-section {
+      display: flex;
       align-items: center;
       gap: 0.5rem;
-      max-width: 900px;
-      margin: 0 auto 1rem auto;
-      border-radius: 4px;
-    }
-
-    .bottom-contact {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
       cursor: pointer;
+      position: relative;
+      user-select: none;
     }
-    .bottom-contact svg {
-      width: 18px;
-      height: 18px;
-      fill: #D44638; /* Gmail Red */
+    .bottom-bar .contact-icon {
+      width: 20px;
+      height: 20px;
+      fill: #d44638; /* Gmail red */
     }
     .contact-info-box {
-      position: fixed;
-      bottom: 60px;
-      right: 1rem;
+      position: absolute;
+      bottom: 120%;
       background: white;
-      border: 1px solid #ddd;
-      padding: 1rem;
-      border-radius: 6px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.15);
-      max-width: 250px;
-      display: none;
+      color: black;
+      padding: 0.7rem 1rem;
+      border-radius: 4px;
+      box-shadow: 0 0 6px rgba(0,0,0,0.2);
       font-size: 0.9rem;
-      color: #333;
-      z-index: 1100;
+      display: none;
+      white-space: nowrap;
     }
 
-    /* Scrollbar for cart */
-    .cart-items::-webkit-scrollbar {
-      width: 8px;
+    /* Product cards */
+    .product {
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      max-width: 400px;
     }
-    .cart-items::-webkit-scrollbar-thumb {
-      background-color: rgba(0,0,0,0.2);
+    .product img {
+      max-width: 100%;
+      border-radius: 6px;
+      margin-bottom: 0.6rem;
+    }
+    .product-name {
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin-bottom: 0.3rem;
+    }
+    .product-price {
+      color: #007bff;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    .info-text {
+      background: #eef3f7;
+      padding: 0.5rem;
+      margin-top: 0.4rem;
       border-radius: 4px;
+      font-size: 0.9rem;
+      display: none;
+      white-space: normal;
     }
+    .black-btn {
+      width: 100%;
+      background: black;
+      color: white;
+      border: none;
+      padding: 8px;
+      margin-bottom: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 4px;
+      user-select: none;
+    }
+    .add-to-cart {
+      width: 100%;
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 8px;
+      font-weight: 600;
+      border-radius: 4px;
+      cursor: pointer;
+      user-select: none;
+    }
+
   </style>
 </head>
 <body>
 
-  <header class="top-bar">
+  <div class="top-bar">
     TrendToLife
-    <div class="social-icons" aria-label="Social media links">
-      <a href="#" title="Twitter" aria-label="Twitter" style="color:#1DA1F2;">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.954 4.569a10 10 0 01-2.825.775 4.932 4.932 0 002.163-2.724 9.867 9.867 0 01-3.127 1.195 4.916 4.916 0 00-8.38 4.482A13.94 13.94 0 011.671 3.149a4.902 4.902 0 001.523 6.574 4.897 4.897 0 01-2.228-.616v.06a4.919 4.919 0 003.946 4.827 4.996 4.996 0 01-2.224.085 4.923 4.923 0 004.6 3.417 9.867 9.867 0 01-6.102 2.105c-.395 0-.779-.023-1.158-.067a13.945 13.945 0 007.548 2.209c9.142 0 14.307-7.721 14.307-14.415 0-.22-.005-.437-.015-.653A10.025 10.025 0 0024 4.59z"/></svg>
-      </a>
-      <a href="#" title="TikTok" aria-label="TikTok" style="color:#69C9D0;">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.004 2.002v9.066a4.501 4.501 0 01-4.493-4.497h-2.006a6.507 6.507 0 006.5 6.5V2.002h-0.001z"/></svg>
-      </a>
-      <a href="#" title="Instagram" aria-label="Instagram" style="color:#E4405F;">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 2h10a5 5 0 015 5v10a5 5 0 01-5 5H7a5 5 0 01-5-5V7a5 5 0 015-5zm10 2a3 3 0 100 6 3 3 0 000-6zM12 8a4 4 0 110 8 4 4 0 010-8z"/></svg>
-      </a>
-      <a href="#" title="YouTube" aria-label="YouTube" style="color:#FF0000;">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.615 3.184c-1.158-.116-5.785-.116-5.785-.116s-4.627 0-5.785.116c-1.234.124-2.027 1.005-2.128 3.63-.116 2.949-.116 6.007-.116 6.007s0 3.058.116 6.007c.101 2.624.894 3.506 2.128 3.63 1.158.116 5.785.116 5.785.116s4.627 0 5.785-.116c1.234-.124 2.027-1.006 2.128-3.63.116-2.949.116-6.007.116-6.007s0-3.058-.116-6.007c-.101-2.625-.894-3.506-2.128-3.63zM10 15.5V8.5l5 3.5-5 3.5z"/></svg>
-      </a>
+    <div class="right-controls">
+      <div class="social-icons" aria-label="Social media links">
+        <a href="#" class="social-twitter" title="Twitter" target="_blank" rel="noopener noreferrer" aria-label="Twitter">T</a>
+        <a href="#" class="social-instagram" title="Instagram" target="_blank" rel="noopener noreferrer" aria-label="Instagram">I</a>
+        <a href="#" class="social-tiktok" title="TikTok" target="_blank" rel="noopener noreferrer" aria-label="TikTok">Tk</a>
+        <a href="#" class="social-youtube" title="YouTube" target="_blank" rel="noopener noreferrer" aria-label="YouTube">Y</a>
+      </div>
+      <button class="cart-button" aria-label="Open cart">Cart</button>
     </div>
-  </header>
+  </div>
 
-  <main class="content">
-    <!-- Products -->
-    <div class="product" data-id="1" data-name="Cool Shirt" data-price="19.99" data-info="A stylish cool shirt made from organic cotton.">
-      <img src="https://via.placeholder.com/400x300?text=Cool+Shirt" alt="Cool Shirt" />
-      <div class="product-name">Cool Shirt</div>
-      <div class="product-price">$19.99</div>
-      <button class="info-button">More Info</button>
-      <div class="info-text"></div>
+  <main class="content" id="product-list">
+    <!-- Example product -->
+    <div class="product" data-id="1" data-name="Awesome Product" data-price="29.99">
+      <div class="product-name">Awesome Product</div>
+      <img src="https://via.placeholder.com/300x180?text=Product+Image" alt="Awesome Product" />
+      <div class="product-price">$29.99</div>
+      <button class="black-btn more-info-btn">More Info</button>
+      <div class="info-text">This is some extra information about the awesome product. It fits nicely here below without resizing anything.</div>
       <button class="add-to-cart">Add to Cart</button>
     </div>
 
-    <div class="product" data-id="2" data-name="Trendy Sneakers" data-price="59.99" data-info="Lightweight sneakers with breathable fabric. Perfect for everyday wear.">
-      <img src="https://via.placeholder.com/400x300?text=Trendy+Sneakers" alt="Trendy Sneakers" />
-      <div class="product-name">Trendy Sneakers</div>
-      <div class="product-price">$59.99</div>
-      <button class="info-button">More Info</button>
-      <div class="info-text"></div>
+    <div class="product" data-id="2" data-name="Cool Gadget" data-price="49.99">
+      <div class="product-name">Cool Gadget</div>
+      <img src="https://via.placeholder.com/300x180?text=Product+Image" alt="Cool Gadget" />
+      <div class="product-price">$49.99</div>
+      <button class="black-btn more-info-btn">More Info</button>
+      <div class="info-text">Cool gadget with many features you will love. More info below the button.</div>
       <button class="add-to-cart">Add to Cart</button>
     </div>
-
-    <div class="product" data-id="3" data-name="Stylish Hat" data-price="14.99" data-info="A stylish hat to complete your outfit. Adjustable fit for all sizes.">
-      <img src="https://via.placeholder.com/400x300?text=Stylish+Hat" alt="Stylish Hat" />
-      <div class="product-name">Stylish Hat</div>
-      <div class="product-price">$14.99</div>
-      <button class="info-button">More Info</button>
-      <div class="info-text"></div>
-      <button class="add-to-cart">Add to Cart</button>
-    </div>
-
   </main>
 
-  <!-- Cart Panel -->
-  <aside class="cart-panel" aria-label="Shopping Cart" role="complementary">
+  <!-- Cart panel -->
+  <aside class="cart-panel" aria-label="Shopping cart" aria-hidden="true" id="cartPanel">
     <div class="cart-header">
-      Your Cart
-      <button class="close-cart" aria-label="Close cart">&lt;</button>
+      Cart
+      <button class="close-cart-btn" aria-label="Close cart">&lt;</button>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+
+    <div class="discount-section">
+      <input type="text" id="discountCode" placeholder="Enter discount code" aria-label="Discount code input" />
+      <button id="applyDiscountBtn">Apply</button>
     </div>
 
-    <div class="cart-items" aria-live="polite"></div>
-
-    <div class="discount-code-section">
-      <input type="text" id="discountCodeInput" placeholder="Enter discount code" aria-label="Discount code input" />
-      <button id="applyDiscountBtn">Apply Code</button>
-    </div>
-
-    <div class="you-saved" style="display:none;">You saved: $0.00</div>
-    <div class="total-cost">Total cost: $0.00</div>
-
-    <button class="continue-payment">Continue to Payment</button>
+    <div class="you-saved" id="youSaved">You saved: $0.00</div>
+    <div class="total-cost" id="totalCost">Total cost: $0.00</div>
+    <button class="continue-payment" id="continuePaymentBtn" disabled>Continue to payment</button>
   </aside>
 
   <!-- Payment Modal -->
-  <div id="paymentModal" aria-hidden="true" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); 
-    display:flex; justify-content:center; align-items:center; z-index:10000;">
-    <div style="background:#fff; padding:2rem; border-radius:8px; width:320px; max-width:90%;" role="dialog" aria-modal="true" aria-labelledby="paymentTitle">
+  <div id="paymentModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="paymentTitle">
+    <div class="payment-content">
       <h2 id="paymentTitle">Payment Details</h2>
-      <label>
-        Name on Card:<br />
-        <input type="text" id="cardName" style="width:100%; padding:0.5rem; margin-top:0.25rem;" autocomplete="cc-name" />
-      </label><br /><br />
-      <label>
-        Card Number:<br />
-        <input type="text" id="cardNumber" maxlength="16" style="width:100%; padding:0.5rem; margin-top:0.25rem;" autocomplete="cc-number" />
-      </label><br /><br />
-      <label>
-        Expiry Date:<br />
-        <input type="text" id="cardExpiry" placeholder="MM/YY" maxlength="5" style="width:100%; padding:0.5rem; margin-top:0.25rem;" autocomplete="cc-exp" />
-      </label><br /><br />
-      <label>
-        CVV:<br />
-        <input type="password" id="cardCVV" maxlength="4" style="width:100%; padding:0.5rem; margin-top:0.25rem;" autocomplete="cc-csc" />
-      </label><br /><br />
-      <button id="payNowBtn" style="background:#007bff; color:#fff; border:none; padding:0.75rem 1rem; border-radius:4px; width:100%;">Pay Now</button>
-      <button id="closePaymentBtn" style="margin-top:1rem; width:100%; padding:0.5rem; border:none; background:#ccc; border-radius:4px;">Cancel</button>
+      <form id="paymentForm">
+        <label for="cardName">Cardholder Name</label>
+        <input type="text" id="cardName" name="cardName" required autocomplete="cc-name" />
+        <label for="cardNumber">Card Number</label>
+        <input type="text" id="cardNumber" name="cardNumber" required maxlength="19" autocomplete="cc-number" placeholder="1234 5678 9012 3456" />
+        <label for="expiry">Expiry Date</label>
+        <input type="text" id="expiry" name="expiry" required maxlength="5" placeholder="MM/YY" autocomplete="cc-exp" />
+        <label for="cvv">CVV</label>
+        <input type="password" id="cvv" name="cvv" required maxlength="4" autocomplete="cc-csc" />
+
+        <div class="payment-buttons">
+          <button type="submit" class="pay-now-btn">Pay Now</button>
+          <button type="button" class="close-payment-btn" id="closePaymentBtn">Cancel</button>
+        </div>
+      </form>
     </div>
   </div>
 
-  <!-- Bottom Contact Bar -->
   <footer class="bottom-bar">
-    <div class="bottom-contact" tabindex="0" role="button" aria-pressed="false" aria-label="Contact for questions or refunds">
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" fill="#D44638"/></svg>
+    <div class="contact-section" tabindex="0" aria-describedby="contactInfo" role="button" aria-expanded="false">
+      <svg class="contact-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12.713l11.985-8.438v-.275A2.299 2.299 0 0019.712 2H4.287a2.301 2.301 0 00-2.28 2v.274L12 12.713zm0 2.142L1.015 6.433v12.818A2.298 2.298 0 003.297 22h17.405a2.299 2.299 0 002.28-2V6.432L12 14.854z"/></svg>
       <span>Contact</span>
+      <div class="contact-info-box" id="contactInfo" role="region" aria-live="polite">
+        For questions or refunds, trendtolife.co@gmail.com
+      </div>
     </div>
+    <div>© 2025 TrendToLife</div>
   </footer>
 
-  <div class="contact-info-box" role="alert" aria-live="polite">
-    For questions or refunds, trendtolife.co@gmail.com
-  </div>
+<script>
+  // Toggle cart panel
+  const cartBtn = document.querySelector('.cart-button');
+  const cartPanel = document.getElementById('cartPanel');
+  const closeCartBtn = document.querySelector('.close-cart-btn');
+  const cartItemsContainer = document.getElementById('cartItems');
+  const continuePaymentBtn = document.getElementById('continuePaymentBtn');
+  const discountInput = document.getElementById('discountCode');
+  const applyDiscountBtn = document.getElementById('applyDiscountBtn');
+  const youSavedEl = document.getElementById('youSaved');
+  const totalCostEl = document.getElementById('totalCost');
 
-  <script>
-    // Products & Cart Data
-    const products = [...document.querySelectorAll('.product')].map(prod => ({
-      id: prod.dataset.id,
-      name: prod.dataset.name,
-      price: parseFloat(prod.dataset.price),
-      info: prod.dataset.info,
-      element: prod
-    }));
+  const paymentModal = document.getElementById('paymentModal');
+  const closePaymentBtn = document.getElementById('closePaymentBtn');
+  const paymentForm = document.getElementById('paymentForm');
 
-    // Cart object with productId keys and qty
-    let cart = {};
+  // Contact info toggle
+  const contactSection = document.querySelector('.contact-section');
+  const contactInfoBox = document.querySelector('.contact-info-box');
 
-    // Discount info
-    const discountCode = 'RELEASE';
-    let discountActive = false;
-    let discountPercent = 0.25; // 25%
+  // Products array (in real case would be dynamic)
+  const products = [
+    { id: 1, name: "Awesome Product", price: 29.99 },
+    { id: 2, name: "Cool Gadget", price: 49.99 }
+  ];
 
-    // Elements
-    const cartPanel = document.querySelector('.cart-panel');
-    const cartItemsDiv = document.querySelector('.cart-items');
-    const closeCartBtn = document.querySelector('.close-cart');
-    const discountInput = document.getElementById('discountCodeInput');
-    const applyDiscountBtn = document.getElementById('applyDiscountBtn');
-    const youSavedDiv = document.querySelector('.you-saved');
-    const totalCostDiv = document.querySelector('.total-cost');
-    const continuePaymentBtn = document.querySelector('.continue-payment');
-    const paymentModal = document.getElementById('paymentModal');
-    const payNowBtn = document.getElementById('payNowBtn');
-    const closePaymentBtn = document.getElementById('closePaymentBtn');
+  let cart = [];
+  let discountApplied = false;
+  const discountCode = "RELEASE";
+  const discountPercent = 25; // 25% off
 
-    const contactBtn = document.querySelector('.bottom-contact');
-    const contactInfoBox = document.querySelector('.contact-info-box');
-
-    // Open cart panel function
-    function openCart() {
-      cartPanel.classList.add('open');
-    }
-
-    // Close cart panel function
-    function closeCart() {
-      cartPanel.classList.remove('open');
-    }
-
-    // Update cart display
-    function updateCart() {
-      cartItemsDiv.innerHTML = '';
-
-      let total = 0;
-      let savedAmount = 0;
-
-      Object.keys(cart).forEach(id => {
-        const product = products.find(p => p.id === id);
-        const qty = cart[id];
-        const price = product.price * qty;
-
-        total += price;
-
-        // Cart item element
-        const itemDiv = document.createElement('div');
-        itemDiv.className = 'cart-item';
-
-        itemDiv.innerHTML = `
-          <div class="cart-item-name">${product.name}</div>
-          <div>
-            Qty: <button aria-label="Decrease quantity" data-id="${id}" class="decrease-qty">-</button>
-            <span class="cart-item-qty">${qty}</span>
-            <button aria-label="Increase quantity" data-id="${id}" class="increase-qty">+</button>
-            <button aria-label="Remove item" data-id="${id}" class="trash-btn">&times;</button>
-          </div>
-          <div class="cart-item-price">$${price.toFixed(2)}</div>
-        `;
-
-        cartItemsDiv.appendChild(itemDiv);
-      });
-
-      // Apply discount if active
-      if (discountActive) {
-        savedAmount = total * discountPercent;
-        total = total - savedAmount;
-        youSavedDiv.style.display = 'block';
-        youSavedDiv.textContent = `You saved: $${savedAmount.toFixed(2)}`;
-      } else {
-        youSavedDiv.style.display = 'none';
-      }
-
-      totalCostDiv.textContent = `Total cost: $${total.toFixed(2)}`;
-
-      // Disable payment if cart empty
-      continuePaymentBtn.disabled = Object.keys(cart).length === 0;
-      continuePaymentBtn.style.opacity = continuePaymentBtn.disabled ? '0.5' : '1';
-    }
-
-    // Add to cart handler
-    function addToCart(id) {
-      if (cart[id]) {
-        cart[id]++;
-      } else {
-        cart[id] = 1;
-      }
-      updateCart();
+  // Toggle cart open/close
+  cartBtn.addEventListener('click', () => {
+    if (cartPanel.classList.contains('open')) {
+      closeCart();
+    } else {
       openCart();
     }
+  });
+  closeCartBtn.addEventListener('click', closeCart);
 
-    // Remove from cart handler
-    function removeFromCart(id) {
-      delete cart[id];
-      updateCart();
+  function openCart() {
+    cartPanel.classList.add('open');
+    cartPanel.setAttribute('aria-hidden', 'false');
+    updateCartUI();
+  }
+  function closeCart() {
+    cartPanel.classList.remove('open');
+    cartPanel.setAttribute('aria-hidden', 'true');
+  }
+
+  // Add to cart buttons
+  document.querySelectorAll('.add-to-cart').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const productEl = e.target.closest('.product');
+      const id = parseInt(productEl.dataset.id);
+      const product = products.find(p => p.id === id);
+      addToCart(product);
+    });
+  });
+
+  function addToCart(product) {
+    const existing = cart.find(item => item.id === product.id);
+    if (existing) {
+      existing.quantity++;
+    } else {
+      cart.push({...product, quantity: 1});
+    }
+    discountApplied = false;
+    discountInput.value = '';
+    updateCartUI();
+    openCart();
+  }
+
+  function updateCartUI() {
+    // Clear items
+    cartItemsContainer.innerHTML = '';
+
+    if (cart.length === 0) {
+      cartItemsContainer.innerHTML = '<p>Your cart is empty.</p>';
+      continuePaymentBtn.disabled = true;
+      youSavedEl.style.display = 'none';
+      totalCostEl.textContent = 'Total cost: $0.00';
+      return;
     }
 
-    // Change qty handler
-    function changeQty(id, amount) {
-      if (!cart[id]) return;
-      cart[id] += amount;
-      if (cart[id] < 1) {
+    cart.forEach(item => {
+      const itemEl = document.createElement('div');
+      itemEl.classList.add('cart-item');
+
+      itemEl.innerHTML = `
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-controls">
+          <button class="quantity-btn" data-id="${item.id}" data-action="decrease">-</button>
+          <span>Qty: ${item.quantity}</span>
+          <button class="quantity-btn" data-id="${item.id}" data-action="increase">+</button>
+          <button class="trash-btn" data-id="${item.id}" aria-label="Remove item">&times;</button>
+        </div>
+        <div class="cart-item-price">$${(item.price * item.quantity).toFixed(2)}</div>
+      `;
+
+      cartItemsContainer.appendChild(itemEl);
+    });
+
+    // Add event listeners for quantity buttons and delete buttons
+    cartItemsContainer.querySelectorAll('.quantity-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = parseInt(e.target.dataset.id);
+        const action = e.target.dataset.action;
+        updateQuantity(id, action);
+      });
+    });
+    cartItemsContainer.querySelectorAll('.trash-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = parseInt(e.target.dataset.id);
         removeFromCart(id);
-      } else {
-        updateCart();
-      }
-    }
-
-    // Discount code apply
-    function applyDiscount() {
-      const code = discountInput.value.trim().toUpperCase();
-      if (code === discountCode) {
-        discountActive = true;
-        alert('Discount code applied! 25% off your order.');
-      } else {
-        discountActive = false;
-        alert('Invalid discount code.');
-      }
-      updateCart();
-    }
-
-    // Show/hide product info text
-    document.querySelectorAll('.info-button').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const productDiv = btn.closest('.product');
-        const infoDiv = productDiv.querySelector('.info-text');
-        if (infoDiv.style.display === 'block') {
-          infoDiv.style.display = 'none';
-          infoDiv.textContent = '';
-          btn.textContent = 'More Info';
-        } else {
-          infoDiv.style.display = 'block';
-          infoDiv.textContent = productDiv.dataset.info;
-          btn.textContent = 'Less Info';
-        }
       });
     });
 
-    // Add to cart buttons
-    document.querySelectorAll('.add-to-cart').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const productDiv = btn.closest('.product');
-        addToCart(productDiv.dataset.id);
-      });
+    const total = calculateTotal();
+    totalCostEl.textContent = `Total cost: $${total.toFixed(2)}`;
+    if (discountApplied) {
+      const savedAmount = calculateSaved(total);
+      youSavedEl.textContent = `You saved: $${savedAmount.toFixed(2)}`;
+      youSavedEl.style.display = 'block';
+    } else {
+      youSavedEl.style.display = 'none';
+    }
+
+    continuePaymentBtn.disabled = total === 0;
+  }
+
+  function updateQuantity(id, action) {
+    const item = cart.find(i => i.id === id);
+    if (!item) return;
+    if (action === 'increase') {
+      item.quantity++;
+    } else if (action === 'decrease' && item.quantity > 1) {
+      item.quantity--;
+    }
+    discountApplied = false;
+    discountInput.value = '';
+    updateCartUI();
+  }
+
+  function removeFromCart(id) {
+    cart = cart.filter(item => item.id !== id);
+    discountApplied = false;
+    discountInput.value = '';
+    updateCartUI();
+  }
+
+  function calculateTotal() {
+    let sum = 0;
+    cart.forEach(item => {
+      sum += item.price * item.quantity;
     });
+    if (discountApplied) {
+      sum = sum * (1 - discountPercent / 100);
+    }
+    return sum;
+  }
 
-    // Cart panel close
-    closeCartBtn.addEventListener('click', closeCart);
+  function calculateSaved(total) {
+    return (total / (1 - discountPercent / 100)) - total;
+  }
 
-    // Cart item qty buttons and remove
-    cartItemsDiv.addEventListener('click', e => {
-      if (e.target.classList.contains('increase-qty')) {
-        const id = e.target.dataset.id;
-        changeQty(id, 1);
-      }
-      if (e.target.classList.contains('decrease-qty')) {
-        const id = e.target.dataset.id;
-        changeQty(id, -1);
-      }
-      if (e.target.classList.contains('trash-btn')) {
-        const id = e.target.dataset.id;
-        removeFromCart(id);
-      }
-    });
+  // Discount code application
+  applyDiscountBtn.addEventListener('click', () => {
+    const code = discountInput.value.trim().toUpperCase();
+    if (code === discountCode && cart.length > 0) {
+      discountApplied = true;
+      updateCartUI();
+      alert('Discount applied!');
+    } else {
+      alert('Invalid discount code or empty cart.');
+    }
+  });
 
-    // Apply discount code button
-    applyDiscountBtn.addEventListener('click', applyDiscount);
+  // Payment modal handling
+  continuePaymentBtn.addEventListener('click', () => {
+    paymentModal.setAttribute('aria-hidden', 'false');
+    paymentModal.style.display = 'block';
+  });
+  closePaymentBtn.addEventListener('click', () => {
+    paymentModal.setAttribute('aria-hidden', 'true');
+    paymentModal.style.display = 'none';
+  });
 
-    // Continue to payment button
-    continuePaymentBtn.addEventListener('click', () => {
-      paymentModal.style.display = 'flex';
-      paymentModal.setAttribute('aria-hidden', 'false');
-    });
+  paymentForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    alert('Payment processed! Thank you for your purchase.');
+    cart = [];
+    discountApplied = false;
+    discountInput.value = '';
+    updateCartUI();
+    closePaymentBtn.click();
+    closeCart();
+  });
 
-    // Close payment modal
-    closePaymentBtn.addEventListener('click', () => {
-      paymentModal.style.display = 'none';
-      paymentModal.setAttribute('aria-hidden', 'true');
-    });
+  // Contact info toggle
+  contactSection.addEventListener('click', () => {
+    const expanded = contactSection.getAttribute('aria-expanded') === 'true';
+    contactSection.setAttribute('aria-expanded', String(!expanded));
+    contactInfoBox.style.display = expanded ? 'none' : 'block';
+  });
 
-    // Pay now button (basic validation)
-    payNowBtn.addEventListener('click', () => {
-      const name = document.getElementById('cardName').value.trim();
-      const number = document.getElementById('cardNumber').value.trim();
-      const expiry = document.getElementById('cardExpiry').value.trim();
-      const cvv = document.getElementById('cardCVV').value.trim();
+</script>
 
-      if (!name || !number || !expiry || !cvv) {
-        alert('Please fill all payment fields.');
-        return;
-      }
-      if (number.length !== 16 || isNaN(number)) {
-        alert('Please enter a valid 16-digit card number.');
-        return;
-      }
-      if (!/^\d{2}\/\d{2}$/.test(expiry)) {
-        alert('Please enter expiry in MM/YY format.');
-        return;
-      }
-      if (cvv.length < 3 || cvv.length > 4 || isNaN(cvv)) {
-        alert('Please enter a valid CVV.');
-        return;
-      }
-
-      alert('Payment successful! Thank you for your purchase.');
-      // Reset cart & close modal
-      cart = {};
-      discountActive = false;
-      discountInput.value = '';
-      updateCart();
-      paymentModal.style.display = 'none';
-      paymentModal.setAttribute('aria-hidden', 'true');
-    });
-
-    // Bottom contact click toggles contact info box
-    contactBtn.addEventListener('click', () => {
-      if (contactInfoBox.style.display === 'block') {
-        contactInfoBox.style.display = 'none';
-        contactBtn.setAttribute('aria-pressed', 'false');
-      } else {
-        contactInfoBox.style.display = 'block';
-        contactBtn.setAttribute('aria-pressed', 'true');
-      }
-    });
-
-    // Initialize cart display and disable payment if empty
-    updateCart();
-
-  </script>
 </body>
 </html>
